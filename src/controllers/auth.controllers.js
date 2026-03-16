@@ -1,0 +1,202 @@
+import config from "../config/config.js";
+import authServices from "../services/auth.services.js";
+import ApiError from "../utils/ApiError.js";
+import ApiResponse from "../utils/api-response.js";
+import asyncHandler from "../utils/asyncHandler.js";
+import jwt from "jsonwebtoken";
+
+
+
+export const registerUser = asyncHandler(async (req, res) => {
+
+    const { fullname, email, password, phone } = req.body;
+
+    await authServices.checkUserExists(email);
+
+    const user = await authServices.createUser({
+        fullname,
+        email,
+        password,
+        phone
+    });
+
+    const token = await authServices.generateVerifyToken(user._id);
+
+    return res.status(201).json(
+        new ApiResponse(
+            201,
+            {
+                id: user._id,
+                fullname: user.fullname,
+                email: user.email,
+                verifytoken: token
+            },
+            "User registered successfully"
+        )
+    );
+
+});
+
+
+export const loginUser = asyncHandler(async (req, res) => {
+
+    const { email, password } = req.body;
+    // find user
+    const user = await authServices.findUserByEmail(email);
+
+    if (!user) {
+        throw new ApiError(401, "Invalid email or password");
+    }
+
+    // check password
+    const isMatch = await user.comparePassword(password);
+
+    if (!isMatch) {
+        throw new ApiError(401, "Invalid email or password");
+    }
+
+    // generate token
+    const token = jwt.sign(
+        { id: user._id, role: user.role },
+        config.JWT_SECRET,
+        { expiresIn: "7d" }
+    );
+
+    // cookie options
+    const options = {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000
+    };
+
+    res.cookie("token", token, options);
+
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            {
+                id: user._id,
+                fullname: user.fullname,
+                email: user.email,
+                role: user.role
+            },
+            "Login successful"
+        )
+    );
+
+});
+
+
+export const verifyUser = asyncHandler(async (req, res) => {
+
+    const { token } = req.params;
+
+    if (!token) {
+        throw new ApiError(400, "Verification token missing");
+    }
+
+    const user = await authServices.verifyEmail(token);
+
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            {
+                id: user._id,
+                email: user.email,
+                isverify: user.isverify
+            },
+            "Email verified successfully"
+        )
+    );
+
+});
+
+
+export const getProfile = asyncHandler(async (req, res) => {
+    const userid = req.user.id
+    const user = authServices.findUserById(userid)
+
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            user,
+            "Profile fetched successfully"
+        )
+    );
+
+});
+
+export const getme = asyncHandler(async (req, res) => {
+    const user = req.user
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            user,
+            "getme fetched successfully"
+        )
+    );
+
+});
+export const logoutUser = asyncHandler(async (req, res) => {
+    res.clearCookie("token", {
+        httpOnly: true,
+        sameSite: "strict",
+        secure: process.env.NODE_ENV === "production"
+    });
+    return res.status(200).json(
+        new ApiResponse(200, null, "Logged out successfully")
+    );
+
+});
+
+
+
+export const forgotPasswordRequest = asyncHandler(async (req, res) => {
+
+    const { email } = req.body;
+
+    if (!email) {
+        throw new ApiError(400, "Email is required");
+    }
+
+    const user = await  authServices.findUserByEmail(email);
+
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+
+    const token = crypto.randomBytes(32).toString("hex");
+
+    const expire = Date.now() + 1000 * 60 * 15; // 15 minutes
+
+    user.forgottoken = token;
+    user.forgottokenexpire = expire;
+
+    await user.save();
+
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            { resetToken: token },
+            "Password reset token generated"
+        )
+    );
+
+});
+
+
+export const resetPassword = asyncHandler(async (req, res) => {
+
+    const { token } = req.params;
+    const { password } = req.body;
+    await authServices.resetPassword(token,password)
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            null,
+            "Password reset successfully"
+        )
+    );
+
+});
