@@ -29,9 +29,7 @@ class AuthService {
 
     // find user by id
     async findUserById(id) {
-
         const user = await Usermodel.findById(id);
-
         return user;
     }
 

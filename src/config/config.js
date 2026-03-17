@@ -14,9 +14,7 @@ const config = {
     REDIS_HOST:process.env.REDIS_HOST,
     REDIS_PORT:process.env.REDIS_PORT,
     REDIS_PASSWORD:process.env.REDIS_PASSWORD,
-    // MAIL_EMAIL:process.env.MAIL_EMAIL,
-
-
+    LOG_DIR:process.env.LOG_DIR,
 }
 
 export default config

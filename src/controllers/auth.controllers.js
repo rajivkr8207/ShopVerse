@@ -113,8 +113,7 @@ export const verifyUser = asyncHandler(async (req, res) => {
 
 export const getProfile = asyncHandler(async (req, res) => {
     const userid = req.user.id
-    const user = authServices.findUserById(userid)
-
+    const user = await authServices.findUserById(userid)
     return res.status(200).json(
         new ApiResponse(
             200,
