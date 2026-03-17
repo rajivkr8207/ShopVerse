@@ -1,4 +1,5 @@
 import config from "../config/config.js";
+import redis from "../config/redis.js";
 import authServices from "../services/auth.services.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/api-response.js";
@@ -41,16 +42,13 @@ export const registerUser = asyncHandler(async (req, res) => {
 export const loginUser = asyncHandler(async (req, res) => {
 
     const { email, password } = req.body;
-    // find user
     const user = await authServices.findUserByEmail(email);
 
     if (!user) {
         throw new ApiError(401, "Invalid email or password");
     }
-
     // check password
     const isMatch = await user.comparePassword(password);
-
     if (!isMatch) {
         throw new ApiError(401, "Invalid email or password");
     }
@@ -139,11 +137,14 @@ export const getme = asyncHandler(async (req, res) => {
 
 });
 export const logoutUser = asyncHandler(async (req, res) => {
+    const token = req.cookies.token
     res.clearCookie("token", {
         httpOnly: true,
         sameSite: "strict",
         secure: process.env.NODE_ENV === "production"
     });
+    const tokenExpiry = 60 * 60 * 24 * 7;
+    await redis.set(token, Date.now().toString(),"EX",tokenExpiry)
     return res.status(200).json(
         new ApiResponse(200, null, "Logged out successfully")
     );
@@ -160,7 +161,7 @@ export const forgotPasswordRequest = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Email is required");
     }
 
-    const user = await  authServices.findUserByEmail(email);
+    const user = await authServices.findUserByEmail(email);
 
     if (!user) {
         throw new ApiError(404, "User not found");
@@ -190,7 +191,7 @@ export const resetPassword = asyncHandler(async (req, res) => {
 
     const { token } = req.params;
     const { password } = req.body;
-    await authServices.resetPassword(token,password)
+    await authServices.resetPassword(token, password)
     return res.status(200).json(
         new ApiResponse(
             200,

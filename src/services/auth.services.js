@@ -1,7 +1,6 @@
 import crypto from "crypto";
-import Usermodel from "../models/Usermodel.js";
 import ApiError from "../utils/ApiError.js";
-
+import Usermodel from '../models/user.model.js'
 class AuthService {
 
     // create user
@@ -23,7 +22,7 @@ class AuthService {
     // find user by email
     async findUserByEmail(email) {
 
-        const user = await Usermodel.findOne({ email });
+        const user = await Usermodel.findOne({ email }).select('+password');
 
         return user;
     }

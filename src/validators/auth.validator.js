@@ -1,5 +1,5 @@
 import { body } from "express-validator";
-import { validate } from "../config/validate";
+import { validate } from "../config/validate.js";
 
 export const registerValidator = [
 
