@@ -1,5 +1,5 @@
 import addressServices from "../services/address.services.js";
-import ApiResponse from "../utils/api-response.js";
+import ApiResponse from "../utils/ApiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
 export const createAddress = asyncHandler(async (req, res) => {

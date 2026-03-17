@@ -2,7 +2,7 @@ import config from "../config/config.js";
 import redis from "../config/redis.js";
 import authServices from "../services/auth.services.js";
 import ApiError from "../utils/ApiError.js";
-import ApiResponse from "../utils/api-response.js";
+import ApiResponse from "../utils/ApiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import jwt from "jsonwebtoken";
 

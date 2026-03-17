@@ -2,7 +2,7 @@ import asyncHandler from "../utils/asyncHandler.js";
 import ApiError from "../utils/ApiError.js";
 import Sellermodel from "../models/seller.model.js";
 import Usermodel from "../models/user.model.js";
-import ApiResponse from "../utils/api-response.js";
+import ApiResponse from "../utils/ApiResponse.js";
 
 export const verifySeller = asyncHandler(async (req, res) => {
 

@@ -15,6 +15,12 @@ const config = {
     REDIS_PORT:process.env.REDIS_PORT,
     REDIS_PASSWORD:process.env.REDIS_PASSWORD,
     LOG_DIR:process.env.LOG_DIR,
+    IMAGE_KIT: process.env.IMAGE_KIT,
+    // NODE_ENV: process.env.NODE_ENV,
+    // NODE_ENV: process.env.NODE_ENV,
+    // NODE_ENV: process.env.NODE_ENV,
+    // NODE_ENV: process.env.NODE_ENV,
+
 }
 
 export default config

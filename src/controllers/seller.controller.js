@@ -1,5 +1,5 @@
 import sellerServices from "../services/seller.services.js";
-import ApiResponse from "../utils/api-response.js";
+import ApiResponse from "../utils/ApiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
 export const registerSeller = asyncHandler(async (req, res) => {
