@@ -96,14 +96,35 @@ export const createOrder = asyncHandler(async (req, res) => {
 export const getMyOrders = asyncHandler(async (req, res) => {
     const userId = req.user.id;
 
-    const orders = await OrderModel.find({ userId }).sort({ createdAt: -1 });
+    // query params
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
 
-    res.status(200).json(new ApiResponse(200, {
-        count: orders.length,
-        orders
-    }));
+    const skip = (page - 1) * limit;
+
+    // total count
+    const totalOrders = await OrderModel.countDocuments({ userId });
+
+    // fetch paginated orders
+    const orders = await OrderModel.find({ userId })
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit);
+
+    const totalPages = Math.ceil(totalOrders / limit);
+
+    res.status(200).json(
+        new ApiResponse(200, {
+            page,
+            limit,
+            totalOrders,
+            totalPages,
+            hasNextPage: page < totalPages,
+            hasPrevPage: page > 1,
+            orders
+        })
+    );
 });
-
 
 // 🔍 GET ORDER BY ID
 export const getOrderById = asyncHandler(async (req, res) => {
@@ -119,7 +140,6 @@ export const getOrderById = asyncHandler(async (req, res) => {
 });
 
 
-// ❌ CANCEL ORDER
 export const cancelOrder = asyncHandler(async (req, res) => {
     const userId = req.user.id;
     const { orderId } = req.params;
@@ -154,24 +174,24 @@ export const cancelOrder = asyncHandler(async (req, res) => {
 });
 
 
-// 🔄 UPDATE ORDER STATUS (ADMIN)
-export const updateOrderStatus = asyncHandler(async (req, res) => {
-    const { orderId } = req.params;
-    const { status } = req.body;
 
-    const order = await OrderModel.findById(orderId);
+// export const updateOrderStatus = asyncHandler(async (req, res) => {
+//     const { orderId } = req.params;
+//     const { status } = req.body;
 
-    if (!order) {
-        throw new ApiError(404, "Order not found");
-    }
+//     const order = await OrderModel.findById(orderId);
 
-    order.orderStatus = status;
+//     if (!order) {
+//         throw new ApiError(404, "Order not found");
+//     }
 
-    if (status === "DELIVERED") {
-        order.deliveredAt = new Date();
-    }
+//     order.orderStatus = status;
 
-    await order.save();
+//     if (status === "DELIVERED") {
+//         order.deliveredAt = new Date();
+//     }
 
-    res.status(200).json(new ApiResponse(200, order, "Order updated"));
-});
+//     await order.save();
+
+//     res.status(200).json(new ApiResponse(200, order, "Order updated"));
+// });
