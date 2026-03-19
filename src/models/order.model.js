@@ -43,7 +43,7 @@ const orderSchema = new mongoose.Schema({
         ref: "User",
         required: true
     },
-
+   
     items: [orderItemSchema],
 
     shippingAddress: {
@@ -64,7 +64,7 @@ const orderSchema = new mongoose.Schema({
 
     orderStatus: {
         type: String,
-        enum: ["PLACED", "CONFIRMED", "SHIPPED", "DELIVERED", "CANCELLED"],
+        enum: ["PLACED", "ASSIGNED", "PICKED", "DELIVERED", "CANCELLED"],
         default: "PLACED"
     },
 

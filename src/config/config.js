@@ -16,7 +16,7 @@ const config = {
     REDIS_PASSWORD:process.env.REDIS_PASSWORD,
     LOG_DIR:process.env.LOG_DIR,
     IMAGE_KIT: process.env.IMAGE_KIT,
-    // NODE_ENV: process.env.NODE_ENV,
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     // NODE_ENV: process.env.NODE_ENV,
     // NODE_ENV: process.env.NODE_ENV,
     // NODE_ENV: process.env.NODE_ENV,
