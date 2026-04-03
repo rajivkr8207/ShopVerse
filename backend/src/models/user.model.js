@@ -18,21 +18,25 @@ const userSchema = new mongoose.Schema(
 
         password: {
             type: String,
-            required: true,
             select: false
         },
 
         phone: {
             type: String,
-            required: true
+            required: function () {
+                return this.provider === "local"; // only for normal signup
+            }
         },
 
         role: {
             type: String,
-            enum: ["ADMIN", "SELLER", "USER"],
+            enum: ["ADMIN", "SELLER", "USER", "RIDER"],
             default: "USER"
         },
-
+        provider: {
+            type: String,
+            enum: ["local", "google"]
+        },
         profileImage: {
             type: String,
             default: ""

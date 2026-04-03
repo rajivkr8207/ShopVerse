@@ -4,8 +4,49 @@ import authServices from "../services/auth.services.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
-import jwt from "jsonwebtoken";
+import { OAuth2Client } from "google-auth-library";
+import { generateToken } from "../helpers/generateToken.js";
 
+const client = new OAuth2Client(config.GOOGLE_CLIENT_ID);
+
+export const googleAuth = asyncHandler(async (req, res) => {
+    const { token } = req.body;
+
+    const ticket = await client.verifyIdToken({
+        idToken: token,
+        audience: config.GOOGLE_CLIENT_ID
+    });
+
+    const payload = ticket.getPayload();
+
+    const { email, name, picture } = payload;
+
+    let user = await Usermodel.findOne({ email });
+
+    if (user) {
+        if (user.provider === "local") {
+            throw new ApiError(400 ,"Account already exists with email/password. Please login normally." )
+        }
+    } else {
+        user = await Usermodel.create({
+            email,
+            fullname: name,
+            profileImage: picture,
+            provider: "google",
+            isverify: true
+        });
+    }
+
+    const jwtToken = generateToken(user._id, user.role);
+
+    res.cookie("token", jwtToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "None"
+    });
+
+    res.status(200).json(new ApiResponse(200, user));
+});
 
 
 export const registerUser = asyncHandler(async (req, res) => {
@@ -54,16 +95,11 @@ export const loginUser = asyncHandler(async (req, res) => {
     }
 
     // generate token
-    const token = jwt.sign(
-        { id: user._id, role: user.role },
-        config.JWT_SECRET,
-        { expiresIn: "7d" }
-    );
+    const token = generateToken(user._id, user.role);
 
-    // cookie options
     const options = {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: config.NODE_ENV === "production",
         sameSite: "strict",
         maxAge: 7 * 24 * 60 * 60 * 1000
     };
@@ -140,7 +176,7 @@ export const logoutUser = asyncHandler(async (req, res) => {
     res.clearCookie("token", {
         httpOnly: true,
         sameSite: "strict",
-        secure: process.env.NODE_ENV === "production"
+        secure: config.NODE_ENV === "production"
     });
     const tokenExpiry = 60 * 60 * 24 * 7;
     await redis.set(token, Date.now().toString(),"EX",tokenExpiry)

@@ -10,10 +10,10 @@ let dirs = config.LOG_DIR ?? "logs"
 if (!dirs) dirs = path.resolve('logs')
 
 if (!fs.existsSync(dirs)) {
-    fs.mkdirSync(dirs)
+    fs.mkdirSync(dirs, { recursive: true })
 }
 
-const loglevel = config.NODE_ENV == "devlopment" ? "debug" : "warn"
+const loglevel = config.NODE_ENV == "development" ? "debug" : "warn"
 
 const dailyrotefile = new DailyRotateFile({
     level: loglevel,
@@ -24,7 +24,7 @@ const dailyrotefile = new DailyRotateFile({
     maxSize: '20m',
     maxFiles: '14d',
     format: format.combine(
-        format.errors({ stak: true }),
+        format.errors({ stack: true }),
         format.timestamp(),
         format.json(),
     )
