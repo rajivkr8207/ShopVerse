@@ -1,10 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    user: null,
+    user: null, // Will contain { name, email, role: 'ADMIN' | 'SELLER' | 'USER' | 'RIDER', ... }
     loading: false,
     error: null,
     isAuthenticated: false,
+    isEmailVerified: false,
+    registrationSuccess: false,
+    passwordResetRequested: false,
+    passwordResetSuccess: false,
 };
 
 const authSlice = createSlice({
@@ -12,48 +16,69 @@ const authSlice = createSlice({
     initialState,
 
     reducers: {
-        setUser: (state, action) => {
-            state.user = action.payload;
-            state.isAuthenticated = true;
+        setAuthStart: (state) => {
+            state.loading = true;
             state.error = null;
         },
 
-        removeUser: (state) => {
-            state.user = null;
-            state.isAuthenticated = false;
+        setAuthSuccess: (state, action) => {
+            state.loading = false;
+            state.user = action.payload.user;
+            state.isAuthenticated = true;
+            state.isEmailVerified = action.payload.user?.isEmailVerified || false;
+            state.error = null;
+
         },
 
-        setLoading: (state, action) => {
-            state.loading = action.payload;
-        },
-
-        setError: (state, action) => {
+        setAuthFailure: (state, action) => {
+            state.loading = false;
             state.error = action.payload;
         },
 
-        clearError: (state) => {
-            state.error = null;
+        setUser: (state, action) => {
+            state.user = action.payload;
+            state.isAuthenticated = !!action.payload;
+            state.isEmailVerified = action.payload?.isEmailVerified || false;
+        },
+
+        setRegistrationSuccess: (state, action) => {
+            state.registrationSuccess = action.payload;
+            state.loading = false;
+        },
+
+        setPasswordResetRequested: (state, action) => {
+            state.passwordResetRequested = action.payload;
+            state.loading = false;
+        },
+
+        setPasswordResetSuccess: (state, action) => {
+            state.passwordResetSuccess = action.payload;
+            state.loading = false;
         },
 
         logout: (state) => {
             state.user = null;
             state.isAuthenticated = false;
+            state.isEmailVerified = false;
             state.error = null;
+        },
 
-            if (typeof window !== "undefined") {
-                localStorage.removeItem("token");
-            }
+        clearError: (state) => {
+            state.error = null;
         },
     },
 });
 
 export const {
+    setAuthStart,
+    setAuthSuccess,
+    setAuthFailure,
     setUser,
-    removeUser,
-    setLoading,
-    setError,
-    clearError,
+    setRegistrationSuccess,
+    setPasswordResetRequested,
+    setPasswordResetSuccess,
     logout,
+    clearError,
 } = authSlice.actions;
 
 export default authSlice.reducer;
