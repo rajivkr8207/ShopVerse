@@ -25,7 +25,7 @@ export const googleAuth = asyncHandler(async (req, res) => {
 
     if (user) {
         if (user.provider === "local") {
-            throw new ApiError(400 ,"Account already exists with email/password. Please login normally." )
+            throw new ApiError(400, "Account already exists with email/password. Please login normally.")
         }
     } else {
         user = await Usermodel.create({
@@ -162,6 +162,7 @@ export const getProfile = asyncHandler(async (req, res) => {
 
 export const getme = asyncHandler(async (req, res) => {
     const user = req.user
+    console.log(user);
     return res.status(200).json(
         new ApiResponse(
             200,
@@ -179,7 +180,7 @@ export const logoutUser = asyncHandler(async (req, res) => {
         secure: config.NODE_ENV === "production"
     });
     const tokenExpiry = 60 * 60 * 24 * 7;
-    await redis.set(token, Date.now().toString(),"EX",tokenExpiry)
+    await redis.set(token, Date.now().toString(), "EX", tokenExpiry)
     return res.status(200).json(
         new ApiResponse(200, null, "Logged out successfully")
     );

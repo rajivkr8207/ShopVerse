@@ -3,6 +3,7 @@ import "./globals.css";
 import ReduxProvider from "@/store/provider";
 import ThemeManager from "@/components/ThemeManager";
 import { ToastContainer } from "react-toastify";
+import AuthInitializer from "@/features/auth/components/AuthInitializer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,9 +27,10 @@ export default function RootLayout({ children }) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-white dark:bg-[#0b1326] text-slate-900 dark:text-[#dae2fd] transition-colors duration-300">
+      <body className="min-h-full flex flex-col bg-white dark:bg-[#0b1326] text-slate-900 dark:text-[#dae2fd] transition-colors duration-300" suppressHydrationWarning={true}>
         <ReduxProvider>
           <ThemeManager />
+          <AuthInitializer />
           {children}
           <ToastContainer />
         </ReduxProvider>

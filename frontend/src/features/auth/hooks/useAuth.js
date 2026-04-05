@@ -1,6 +1,7 @@
 "use client";
 
 import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
 import {
   setAuthStart,
   setAuthSuccess,
@@ -14,6 +15,7 @@ import {
 } from "../authSlice";
 import { authService } from "../services/auth.services";
 import { toast } from "react-toastify";
+import { useEffect } from "react";
 
 /**
  * useAuth Hook
@@ -21,8 +23,9 @@ import { toast } from "react-toastify";
  */
 export const useAuth = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const { user, loading, error, isAuthenticated, isEmailVerified } = useSelector((state) => state.auth);
-
+  const users = useSelector((state) => state.auth.user);
   // Helper to handle async auth actions
   const handleAuthAction = async (actionFn, successMessage, successCallback) => {
     dispatch(setAuthStart());
@@ -34,7 +37,7 @@ export const useAuth = () => {
     } catch (err) {
       const message = err.response?.data?.message || "An unexpected error occurred.";
       dispatch(setAuthFailure(message));
-      toast.error(message);
+      // toast.error(message);
       return { success: false, error: message };
     }
   };
@@ -46,6 +49,26 @@ export const useAuth = () => {
       (data) => dispatch(setAuthSuccess({ user: data.user }))
     );
   };
+
+  const handleGetMe = async () => {
+    dispatch(setAuthStart());
+    try {
+      const response = await authService.getMe();
+      console.log(response)
+      const user = response.data.data;
+      dispatch(setAuthSuccess({ user }));
+
+      const dashboardRoute = getDashboardRoute(user.role);
+      router.push(dashboardRoute);
+
+      return { success: true, user };
+    } catch (err) {
+      const message = err.response?.data?.message || "Failed to fetch user data.";
+      dispatch(setAuthFailure(message));
+      return { success: false, error: message };
+    }
+  };
+
 
   const register = async (userData) => {
     return handleAuthAction(
@@ -128,6 +151,7 @@ export const useAuth = () => {
     isAuthenticated,
     isEmailVerified,
     login,
+    handleGetMe,
     register,
     logout,
     forgotPassword,

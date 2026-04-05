@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    user: null, // Will contain { name, email, role: 'ADMIN' | 'SELLER' | 'USER' | 'RIDER', ... }
+    user: null,
     loading: false,
     error: null,
     isAuthenticated: false,
@@ -27,7 +27,6 @@ const authSlice = createSlice({
             state.isAuthenticated = true;
             state.isEmailVerified = action.payload.user?.isEmailVerified || false;
             state.error = null;
-
         },
 
         setAuthFailure: (state, action) => {

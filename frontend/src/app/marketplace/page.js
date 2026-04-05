@@ -24,12 +24,12 @@ export default function MarketplacePage() {
     <ProtectedRoute requiredRole="USER">
       <MarketplaceLayout>
         <div className="space-y-12 animate-in fade-in duration-700">
-          
+
           {/* Market Header Hero */}
           <div className="relative rounded-[2.5rem] bg-slate-900 border border-white/5 overflow-hidden p-12 lg:p-20 group">
             <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/20 via-violet-500/10 to-transparent"></div>
             <div className="absolute top-0 right-0 w-1/2 h-full bg-indigo-500 blur-[120px] opacity-20 -translate-y-1/2 translate-x-1/3 group-hover:scale-125 transition-transform duration-1000"></div>
-            
+
             <div className="relative z-10 max-w-2xl space-y-6">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-black uppercase tracking-widest animate-bounce">
                 <Sparkles size={14} /> New Season Collection
@@ -42,20 +42,20 @@ export default function MarketplacePage() {
               </p>
               <div className="flex gap-4 pt-4">
                 <button className="px-8 py-4 bg-white text-slate-900 rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl shadow-white/5 flex items-center gap-3 group">
-                   View Collections
-                   <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                  View Collections
+                  <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                 </button>
               </div>
             </div>
 
             <div className="absolute bottom-0 right-0 p-12 opacity-10 group-hover:opacity-20 transition-opacity">
-               <ShoppingBag size={300} className="text-white -rotate-12 translate-x-1/4 translate-y-1/4" />
+              <ShoppingBag size={300} className="text-white -rotate-12 translate-x-1/4 translate-y-1/4" />
             </div>
           </div>
 
           {/* Marketplace Content */}
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
-            
+
             {/* Filters Sidebar */}
             <div className="lg:col-span-1">
               <ProductFilters />
@@ -71,7 +71,7 @@ export default function MarketplacePage() {
                   </span>
                 </h2>
               </div>
-              
+
               {filteredProducts.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 pb-20">
                   {filteredProducts.map((product) => (

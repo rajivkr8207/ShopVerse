@@ -12,14 +12,20 @@ import { useEffect } from "react";
  * If not logged in -> Show Landing Page or Login.
  */
 export default function Home() {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, handleGetMe } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (!loading && !isAuthenticated) {
-      router.push("/auth/login");
-    }
-  }, [loading, isAuthenticated, router]);
+    const initAuth = async () => {
+      if (!isAuthenticated) {
+        const result = await handleGetMe();
+        if (!result.success) {
+          router.push("/auth/login");
+        }
+      }
+    };
+    initAuth();
+  }, [isAuthenticated, handleGetMe, router]);
 
   if (loading) {
     return (

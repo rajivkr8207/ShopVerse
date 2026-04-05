@@ -17,10 +17,9 @@ export default function ProtectedRoute({ children, requiredRole }) {
       if (!isAuthenticated) {
         router.push("/auth/login");
       } else if (requiredRole && user?.role !== requiredRole) {
-        // If user has the wrong role, redirect to their specific dashboard
-        const dashboard = user?.role === "ADMIN" ? "/admin" : 
-                         user?.role === "SELLER" ? "/seller" :
-                         user?.role === "RIDER" ? "/rider" : "/marketplace";
+        const dashboard = user?.role === "ADMIN" ? "/admin" :
+          user?.role === "SELLER" ? "/seller" :
+            user?.role === "RIDER" ? "/rider" : "/marketplace";
         router.push(dashboard);
       }
     }

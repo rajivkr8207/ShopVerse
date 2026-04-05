@@ -42,7 +42,6 @@ export default function Login() {
     e.preventDefault();
     clearAuthError();
     const result = await login(formData);
-    console.log(result)
     if (result.success) {
       const dashboard = getDashboardRoute(result.data.data.role);
       router.push(dashboard);
