@@ -162,7 +162,6 @@ export const getProfile = asyncHandler(async (req, res) => {
 
 export const getme = asyncHandler(async (req, res) => {
     const user = req.user
-    console.log(user);
     return res.status(200).json(
         new ApiResponse(
             200,

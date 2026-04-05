@@ -1,14 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
-import { 
-  User, 
-  Mail, 
-  Phone, 
-  Calendar, 
-  ShieldCheck, 
-  Camera, 
+import {
+  User,
+  Mail,
+  Phone,
+  Calendar,
+  ShieldCheck,
+  Camera,
   Edit3,
   Globe,
   Bell,
@@ -19,6 +19,7 @@ import ChangePassword from "../components/ChangePassword";
 import DashboardLayout from "@/features/seller/components/DashboardLayout";
 
 export default function ProfilePage() {
+
   const { user, logout } = useAuth();
   const [activeTab, setActiveTab] = useState("profile"); // profile, security, notifications
 
@@ -30,21 +31,20 @@ export default function ProfilePage() {
     { label: "Web URL", value: "shopverse.com", icon: Globe },
     { label: "Member Since", value: "Jan 2026", icon: Calendar },
   ];
-
   return (
     <DashboardLayout>
       <div className="space-y-8 animate-in fade-in duration-500">
-        
+
         {/* Header Hero Area */}
         <div className="relative h-64 rounded-3xl overflow-hidden group">
           <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 via-violet-600 to-indigo-900 group-hover:scale-110 transition-transform duration-1000"></div>
           <div className="absolute inset-0 bg-white/5 backdrop-blur-3xl opacity-20"></div>
-          
-          <div className="absolute -bottom-16 left-12 flex items-end gap-8 z-10">
+
+          <div className="absolute bottom-14 left-12 flex items-end gap-8 z-10">
             <div className="relative">
               <div className="w-40 h-40 rounded-3xl border-8 border-white dark:border-[#0b1326] bg-slate-200 overflow-hidden shadow-2xl relative group/avatar">
-                <img 
-                  src={`https://ui-avatars.com/api/?name=${user?.fullname || 'Admin'}&background=random&size=200`} 
+                <img
+                  src={`https://ui-avatars.com/api/?name=${user?.fullname || 'Admin'}&background=random&size=200`}
                   alt="Profile"
                   className="w-full h-full object-cover transition-transform group-hover/avatar:scale-110 duration-500"
                 />
@@ -54,7 +54,7 @@ export default function ProfilePage() {
               </div>
               <div className="absolute bottom-2 right-2 w-6 h-6 bg-emerald-500 rounded-full border-4 border-white dark:border-[#0b1326] shadow-lg"></div>
             </div>
-            
+
             <div className="mb-20">
               <h1 className="text-4xl font-black text-white tracking-tighter uppercase mb-1">
                 {user?.fullname || "Admin User"}
@@ -68,46 +68,43 @@ export default function ProfilePage() {
 
         {/* Main Content Sections */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 pt-6">
-          
+
           {/* Sidebar Nav */}
           <div className="lg:col-span-1 space-y-3">
-            <button 
+            <button
               onClick={() => setActiveTab("profile")}
-              className={`w-full flex items-center gap-3 px-6 py-4 rounded-2xl font-bold transition-all ${
-                activeTab === "profile" 
-                  ? "bg-indigo-500 text-white shadow-xl shadow-indigo-500/20 translate-x-2" 
-                  : "text-slate-500 dark:text-[#dae2fd]/40 hover:bg-slate-100 dark:hover:bg-white/5"
-              }`}
+              className={`w-full flex items-center gap-3 px-6 py-4 rounded-2xl font-bold transition-all ${activeTab === "profile"
+                ? "bg-indigo-500 text-white shadow-xl shadow-indigo-500/20 translate-x-2"
+                : "text-slate-500 dark:text-[#dae2fd]/40 hover:bg-slate-100 dark:hover:bg-white/5"
+                }`}
             >
               <User className="w-5 h-5" />
               Overview
             </button>
-            <button 
+            <button
               onClick={() => setActiveTab("security")}
-              className={`w-full flex items-center gap-3 px-6 py-4 rounded-2xl font-bold transition-all ${
-                activeTab === "security" 
-                  ? "bg-indigo-500 text-white shadow-xl shadow-indigo-500/20 translate-x-2" 
-                  : "text-slate-500 dark:text-[#dae2fd]/40 hover:bg-slate-100 dark:hover:bg-white/5"
-              }`}
+              className={`w-full flex items-center gap-3 px-6 py-4 rounded-2xl font-bold transition-all ${activeTab === "security"
+                ? "bg-indigo-500 text-white shadow-xl shadow-indigo-500/20 translate-x-2"
+                : "text-slate-500 dark:text-[#dae2fd]/40 hover:bg-slate-100 dark:hover:bg-white/5"
+                }`}
             >
               <ShieldCheck className="w-5 h-5" />
               Security
             </button>
-            <button 
+            <button
               onClick={() => setActiveTab("notifications")}
-              className={`w-full flex items-center gap-3 px-6 py-4 rounded-2xl font-bold transition-all ${
-                activeTab === "notifications" 
-                  ? "bg-indigo-500 text-white shadow-xl shadow-indigo-500/20 translate-x-2" 
-                  : "text-slate-500 dark:text-[#dae2fd]/40 hover:bg-slate-100 dark:hover:bg-white/5"
-              }`}
+              className={`w-full flex items-center gap-3 px-6 py-4 rounded-2xl font-bold transition-all ${activeTab === "notifications"
+                ? "bg-indigo-500 text-white shadow-xl shadow-indigo-500/20 translate-x-2"
+                : "text-slate-500 dark:text-[#dae2fd]/40 hover:bg-slate-100 dark:hover:bg-white/5"
+                }`}
             >
               <Bell className="w-5 h-5" />
               Privacy
             </button>
-            
+
             <div className="h-px bg-slate-100 dark:bg-white/5 my-6"></div>
-            
-            <button 
+
+            <button
               onClick={logout}
               className="w-full flex items-center gap-3 px-6 py-4 rounded-2xl font-bold text-rose-500 hover:bg-rose-500/5 transition-all"
             >
@@ -118,7 +115,7 @@ export default function ProfilePage() {
 
           {/* Tab Content */}
           <div className="lg:col-span-3 space-y-8">
-            
+
             {activeTab === "profile" && (
               <div className="animate-in fade-in slide-in-from-right-8 duration-500 space-y-8">
                 {/* Personal Info Card */}
@@ -129,7 +126,7 @@ export default function ProfilePage() {
                       <Edit3 className="w-4 h-4" /> Edit Profile
                     </button>
                   </div>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-y-10 relative z-10">
                     {personalInfo.map((item, idx) => {
                       const Icon = item.icon;
