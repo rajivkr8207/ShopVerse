@@ -2,7 +2,8 @@ import { Config } from "../config";
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: `${Config.API_URL}/api`,
+    baseURL: `${Config.API_URL}`,
+    withCredentials: true,
     timeout: 10000,
     headers: {
         "Content-Type": "application/json",

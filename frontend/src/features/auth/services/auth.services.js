@@ -13,6 +13,7 @@ export const authService = {
     getMe: async () => {
         return await api.get("/auth/get-me");
     },
+
     profile: async () => {
         return await api.get("/auth/profile");
     },
@@ -31,5 +32,9 @@ export const authService = {
 
     verifyForgotPassword: async (token, data) => {
         return await api.post(`/auth/reset-password/${token}`, data);
+    },
+
+    changePassword: async (data) => {
+        return await api.post("/auth/change-password", data);
     },
 };
