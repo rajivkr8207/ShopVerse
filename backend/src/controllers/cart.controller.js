@@ -59,16 +59,13 @@ export const addToCart = asyncHandler(async (req, res) => {
 export const getCart = asyncHandler(async (req, res) => {
     const userId = req.user.id;
 
-    const cart = await CartModel.findOne({ userId });
+    let cart = await CartModel.findOne({ userId });
 
     if (!cart) {
-        return res.status(200).json({
-            success: true,
-            cart: { items: [], totalPrice: 0 }
-        });
+        cart = { items: [], totalPrice: 0 };
     }
 
-    res.status(200).json(new ApiResponse(200, cart,));
+    res.status(200).json(new ApiResponse(200, cart, "Cart fetched securely"));
 });
 
 

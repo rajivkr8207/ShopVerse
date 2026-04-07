@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useMemo } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import MarketplaceLayout from "@/features/marketplace/components/MarketplaceLayout";
 import ProductCard from "@/features/marketplace/components/ProductCard";
 import ProductFilters from "@/features/marketplace/components/ProductFilters";
 import { Sparkles, ShoppingBag, ArrowRight } from "lucide-react";
 import ProtectedRoute from "@/features/auth/components/ProtectedRoute";
+import { fetchCart } from "@/features/marketplace/cartSlice";
 
 export default function MarketplacePage() {
   const { products, filters, loading } = useSelector((state) => state.marketplace);
@@ -19,7 +20,10 @@ export default function MarketplacePage() {
       return matchSearch && matchCategory && matchPrice;
     });
   }, [products, filters]);
-
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(fetchCart());
+  }, []);
   return (
     <ProtectedRoute requiredRole="USER">
       <MarketplaceLayout>
@@ -75,6 +79,7 @@ export default function MarketplacePage() {
               {filteredProducts.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 pb-20">
                   {filteredProducts.map((product) => (
+
                     <ProductCard key={product.id} product={product} />
                   ))}
                 </div>

@@ -5,6 +5,7 @@ import { useCallback } from "react";
 import { addItem, removeItem, updateQuantity, clearCart } from "../cartSlice";
 import { toast } from "react-toastify";
 import { ShoppingBag } from "lucide-react";
+import { marketplaceService } from "../services/marketplace.services";
 
 /**
  * useCart Hook
@@ -14,9 +15,10 @@ export const useCart = () => {
   const dispatch = useDispatch();
   const { items, totalAmount, totalQuantity } = useSelector((state) => state.cart);
 
-  const addToCart = useCallback((product) => {
+  const addToCart = useCallback(async (product) => {
+    await marketplaceService.addToCartapi(product.id, product.quantity)
     dispatch(addItem(product));
-    toast.success(`${product.name} added to cart!`, {
+    toast.success(`added to cart!`, {
       icon: <ShoppingBag size={18} className="text-white" />,
       className: "bg-indigo-600 text-white rounded-2xl shadow-xl shadow-indigo-600/20",
     });

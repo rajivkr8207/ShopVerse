@@ -4,48 +4,23 @@ import authServices from "../services/auth.services.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
-import { OAuth2Client } from "google-auth-library";
+import crypto from "crypto";
+
 import { generateToken } from "../helpers/generateToken.js";
 
-const client = new OAuth2Client(config.GOOGLE_CLIENT_ID);
 
-export const googleAuth = asyncHandler(async (req, res) => {
-    const { token } = req.body;
-
-    const ticket = await client.verifyIdToken({
-        idToken: token,
-        audience: config.GOOGLE_CLIENT_ID
-    });
-
-    const payload = ticket.getPayload();
-
-    const { email, name, picture } = payload;
-
-    let user = await Usermodel.findOne({ email });
-
-    if (user) {
-        if (user.provider === "local") {
-            throw new ApiError(400, "Account already exists with email/password. Please login normally.")
-        }
-    } else {
-        user = await Usermodel.create({
-            email,
-            fullname: name,
-            profileImage: picture,
-            provider: "google",
-            isverify: true
-        });
-    }
-
+export const googleAuthHandler = asyncHandler(async (req, res) => {
+    const user = req.user;
     const jwtToken = generateToken(user._id, user.role);
 
     res.cookie("token", jwtToken, {
         httpOnly: true,
-        secure: true,
-        sameSite: "None"
+        secure: config.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
-    res.status(200).json(new ApiResponse(200, user));
+    res.redirect(`${config.CORSORIGIN}/dashboard`);
 });
 
 

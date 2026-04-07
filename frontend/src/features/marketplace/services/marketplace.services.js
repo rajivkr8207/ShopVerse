@@ -7,7 +7,13 @@ export const marketplaceService = {
     getProducts: async (params = {}) => {
         return await api.get("/products", { params });
     },
-
+    getCartApi: async () => {
+        const res = await api.get('/cart')
+        return res.data
+    },
+    addToCartapi: async (productId, quantity) => {
+        return await api.post("/cart", { productId, quantity });
+    },
     /**
      * Fetch a single product by ID
      */
@@ -21,7 +27,7 @@ export const marketplaceService = {
     getCategories: async () => {
         return await api.get("/products/categories");
     },
-    
+
     /**
      * Search products
      */
