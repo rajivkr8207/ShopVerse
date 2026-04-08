@@ -15,7 +15,8 @@ export const authService = {
     },
 
     profile: async () => {
-        return await api.get("/auth/profile");
+        const res = await api.get("/auth/profile");
+        return res.data
     },
 
     logout: async () => {

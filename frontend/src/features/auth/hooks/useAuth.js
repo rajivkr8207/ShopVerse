@@ -53,9 +53,8 @@ export const useAuth = () => {
   const handleGetMe = async () => {
     dispatch(setAuthStart());
     try {
-      const response = await authService.getMe();
-      console.log(response)
-      const user = response.data.data;
+      const response = await authService.profile();
+      const user = response.data;
       dispatch(setAuthSuccess({ user }));
 
       const dashboardRoute = getDashboardRoute(user.role);
@@ -127,7 +126,7 @@ export const useAuth = () => {
     return handleAuthAction(
       () => authService.profile(),
       null,
-      (data) => dispatch(setUser(data.user))
+      (data) => dispatch(setUser(data))
     );
   };
 
