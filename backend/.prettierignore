@@ -1,2 +1,9 @@
-nodule_modules
+node_modules
+dist
+build
+coverage
 .env
+*.log
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
