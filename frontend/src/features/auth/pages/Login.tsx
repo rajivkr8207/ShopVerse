@@ -18,7 +18,7 @@ const Login = () => {
 
   return (
     <div className="h-screen flex justify-center items-center">
-      <div className="bg-white p-6 rounded-xl shadow w-96 space-y-4">
+      <div className="bg-neutral-800 p-6 rounded-xl shadow w-96 space-y-4">
         <h2 className="text-xl font-bold">Login</h2>
 
         <input

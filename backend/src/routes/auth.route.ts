@@ -10,6 +10,6 @@ AuthRouter.post("/verify-email", verifyEmail);
 AuthRouter.post("/login", loginValidator, login);
 AuthRouter.get("/profile", protect, getMe);
 AuthRouter.get("/getme", protect, getMe);
-AuthRouter.post("/logout", protect, logout);
+AuthRouter.get("/logout", protect, logout);
 
 export default AuthRouter;

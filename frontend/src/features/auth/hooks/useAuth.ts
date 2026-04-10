@@ -12,33 +12,31 @@ const useAuth = () => {
         const [res, err] = await asyncHandler(() =>
             authService.register(userData)
         );
-        console.log(res);
         if (err) return console.error("Registration error:", err);
     };
 
     const handleLogin = async (userData: LoginPayload) => {
-        console.log(userData);
         const [res, err] = await asyncHandler(() =>
             authService.login(userData)
         );
         dispatch(setUser(res.data.user));
+        navigate('/')
         if (err) return console.error("Login error:", err);
     };
 
     const handleVerifyOtp = async (email: string, otp: string) => {
         const res = await authService.verifyOtp(email, otp);
         console.log("OTP verified:", res);
-        return res;
+        navigate('/login')
     };
     const handleGetProfile = async () => {
         const res = await authService.getProfile();
-        console.log("Profile:", res);
-        return res;
+        dispatch(setUser(res.data))
     };
     const handleLogout = async () => {
         await authService.logout();
         dispatch(setUser(null));
-        navigate('/')
+        navigate('/login')
     };
 
 

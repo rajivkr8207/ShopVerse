@@ -3,8 +3,13 @@ import Register from "../features/auth/pages/Register";
 import Login from "../features/auth/pages/Login";
 import VerifyEmail from "../features/auth/pages/VerifyEmail";
 import Profile from "../features/auth/pages/Profile";
+import Dashboard from "../features/buyer/pages/Dashboard";
 
 export const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Dashboard />,
+  },
   {
     path: "/register",
     element: <Register />,
@@ -20,7 +25,7 @@ export const router = createBrowserRouter([
   {
     path: "/profile",
     element: (
-        <Profile />
+      <Profile />
     ),
   },
   {

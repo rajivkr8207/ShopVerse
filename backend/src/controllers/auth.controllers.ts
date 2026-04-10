@@ -3,7 +3,6 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { createUser, validateUser, generateAuthToken, verifyEmailService } from "../services/auth.service.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
-import { verifyEmailsendemail } from "../services/email.service.js";
 import { mailQueue } from "../queues/mail.queue.js";
 
 const cookieOptions = {
@@ -61,7 +60,6 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const getMe = asyncHandler(async (req: Request, res: Response) => {
-    // The user attaches dynamically by the `protect` middleware
     return res.status(200).json(
         new ApiResponse(200, req.user, "User profile fetched successfully")
     );
