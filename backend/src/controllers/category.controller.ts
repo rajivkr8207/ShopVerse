@@ -2,8 +2,9 @@ import type { Request, Response } from "express";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { CategoryService } from "../services/category.service.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
-export const createCategory = async (req: Request, res: Response) => {
+export const createCategory = asyncHandler(async (req: Request, res: Response) => {
     const { name, slug, description } = req.body;
 
     if (!name || !slug || !description) {
@@ -24,17 +25,17 @@ export const createCategory = async (req: Request, res: Response) => {
     return res.status(201).json(
         new ApiResponse(201, category, "Category created successfully")
     );
-};
+});
 
-export const getCategories = async (_req: Request, res: Response) => {
+export const getCategories = asyncHandler(async (_req: Request, res: Response) => {
     const categories = await CategoryService.getAllCategories();
 
     return res.status(200).json(
         new ApiResponse(200, categories, "Categories fetched successfully")
     );
-};
+});
 
-export const getCategory = async (req: Request, res: Response) => {
+export const getCategory = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
 
     const category = await CategoryService.getCategoryById(id as string);
@@ -45,9 +46,9 @@ export const getCategory = async (req: Request, res: Response) => {
     return res.status(200).json(
         new ApiResponse(200, category, "Category fetched successfully")
     );
-};
+});
 
-export const updateCategory = async (req: Request, res: Response) => {
+export const updateCategory = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
 
     const category = await CategoryService.updateCategory(id as string, req.body);
@@ -59,9 +60,9 @@ export const updateCategory = async (req: Request, res: Response) => {
     return res.status(200).json(
         new ApiResponse(200, category, "Category updated successfully")
     );
-};
+});
 
-export const deleteCategory = async (req: Request, res: Response) => {
+export const deleteCategory = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
 
     const category = await CategoryService.deleteCategory(id as string);
@@ -73,4 +74,4 @@ export const deleteCategory = async (req: Request, res: Response) => {
     return res.status(200).json(
         new ApiResponse(200, {}, "Category deleted successfully")
     );
-};
+});

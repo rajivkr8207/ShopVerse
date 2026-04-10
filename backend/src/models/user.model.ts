@@ -11,6 +11,7 @@ export interface IUser extends Document {
     otpExpire?: Date;
     isVerified: boolean;
     isBlocked: boolean;
+    provider: "local" | "google";
     comparePassword(enteredPassword: string): Promise<boolean>;
 }
 
@@ -43,6 +44,11 @@ const userSchema = new Schema<IUser>(
             type: String,
             enum: ["admin", "seller", "buyer"],
             default: "buyer",
+        },
+        provider: {
+            type: String,
+            enum: ["local", "google"],
+            default: "local"
         },
         otp: {
             type: String,

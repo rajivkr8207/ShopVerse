@@ -1,9 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import type { ICategory } from "../types/category.type.js";
 
-
-
-
 const categorySchema = new Schema<ICategory>({
     name: {
         type: String,
