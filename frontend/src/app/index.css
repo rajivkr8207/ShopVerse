@@ -1,1 +1,32 @@
 @import "tailwindcss";
+
+
+:root {
+    --primary: #00E5FF;
+    --secondary: #1E1E1E;
+    --tertiary: #2B77D2;
+    --neutral: #121212;
+}
+
+body {
+    background-color: var(--secondary);
+    color: white;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    color: white;
+    transition: 0.2s;
+}
+
+.nav-item:hover {
+    background-color: var(--neutral);
+}
+
+.nav-item.active {
+    background-color: var(--tertiary);
+}

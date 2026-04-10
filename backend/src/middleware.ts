@@ -2,6 +2,7 @@ import express from 'express';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import cors from 'cors'
+import passport from 'passport';
 
 export const Middleware = (app: express.Application) => {
     app.use(express.json())
@@ -13,5 +14,6 @@ export const Middleware = (app: express.Application) => {
         credentials: true,
         methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     }))
+    app.use(passport.initialize());
     app.use(express.static('public'))
 }
