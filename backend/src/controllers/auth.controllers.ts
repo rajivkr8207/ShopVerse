@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { createUser, validateUser, generateAuthToken, verifyEmailService } from "../services/auth.service.js";
+import { createUser, validateUser, generateAuthToken, verifyEmailService, createGoogleUser, getProfileService } from "../services/auth.service.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
 import { mailQueue } from "../queues/mail.queue.js";
@@ -9,8 +9,17 @@ const cookieOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict" as const,
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    maxAge: 7 * 24 * 60 * 60 * 1000,
 };
+
+export const googleCallback = asyncHandler(async (req: Request, res: Response) => {
+    const user = req.user as any;
+    const token = generateAuthToken(user._id, user.role);
+    res.cookie("snitch_token", token, cookieOptions);
+    res.redirect("http://localhost:5173/")
+})
+
+
 
 export const register = asyncHandler(async (req: Request, res: Response) => {
     const { fullname, email, password, contact } = req.body
@@ -60,8 +69,9 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const getMe = asyncHandler(async (req: Request, res: Response) => {
+    const user = await getProfileService(req.user?.id as string)
     return res.status(200).json(
-        new ApiResponse(200, req.user, "User profile fetched successfully")
+        new ApiResponse(200, user, "User profile fetched successfully")
     );
 });
 

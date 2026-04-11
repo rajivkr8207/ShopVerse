@@ -3,7 +3,7 @@ import Register from "../features/auth/pages/Register";
 import Login from "../features/auth/pages/Login";
 import VerifyEmail from "../features/auth/pages/VerifyEmail";
 import Profile from "../features/auth/pages/Profile";
-import Dashboard from "../features/buyer/pages/Dashboard";
+import Dashboard from "../features/buyer/dashboard/pages/Dashboard";
 
 export const router = createBrowserRouter([
   {

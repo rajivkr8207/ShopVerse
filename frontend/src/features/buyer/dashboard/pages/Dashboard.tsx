@@ -1,13 +1,14 @@
 import { useSelector } from "react-redux";
 import Navbar from "../components/Navbar"
-import type { AuthState, IUser } from "../../auth/types/auth.type";
-import useAuth from "../../auth/hooks/useAuth";
+import type { IUser } from "../../../auth/types/auth.type";
+import type { RootState } from "../../../../app/app.store";
+import useAuth from "../../../auth/hooks/useAuth";
 import { useEffect } from "react";
 import ProductGrid from "../components/ProductGrid";
 
 const Dashboard = () => {
     const { handleGetProfile } = useAuth()
-    const user = useSelector((state: AuthState) => state.auth.user) as IUser | null;
+    const user = useSelector((state: RootState) => state.auth.user) as IUser | null;
     useEffect(() => {
         if (!user) {
             handleGetProfile()
