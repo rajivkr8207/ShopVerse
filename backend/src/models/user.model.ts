@@ -5,13 +5,14 @@ export interface IUser extends Document {
     fullname: string;
     email: string;
     password?: string;
-    contact: string;
+    contact?: string;
     role: "admin" | "seller" | "buyer";
     otp?: string;
     otpExpire?: Date;
     isVerified: boolean;
     isBlocked: boolean;
     provider: "local" | "google";
+    googleId?: string
     comparePassword(enteredPassword: string): Promise<boolean>;
 }
 
@@ -32,13 +33,11 @@ const userSchema = new Schema<IUser>(
         },
         password: {
             type: String,
-            required: true,
             minlength: 6,
             select: false,
         },
         contact: {
             type: String,
-            required: true,
         },
         role: {
             type: String,
@@ -49,6 +48,10 @@ const userSchema = new Schema<IUser>(
             type: String,
             enum: ["local", "google"],
             default: "local"
+        },
+        googleId: {
+            type: String,
+            default: null
         },
         otp: {
             type: String,

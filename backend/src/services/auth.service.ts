@@ -4,6 +4,24 @@ import jwt from "jsonwebtoken";
 import { ApiError } from "../utils/ApiError.js";
 import { config } from "../config/config.js";
 
+
+export const getProfileService = async (userId: string) => {
+    const user = await User.findById(userId);
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+    const userdata = {
+        _id: user?._id,
+        fullname: user?.fullname,
+        contact: user?.contact,
+        email: user?.email,
+        role: user?.role,
+        isVerified: user?.isVerified,
+        isBlocked: user?.isBlocked,
+    }
+    return userdata
+}
+
 export const createUser = async ({ fullname, email, password, contact }: { fullname: string, email: string, password: string, contact: string }) => {
     const existingUser = await User.findOne({ email: email } as any);
     if (existingUser) {
@@ -61,3 +79,12 @@ export const generateAuthToken = (userId: string | unknown, role: string) => {
     const payload = { id: userId, role };
     return jwt.sign(payload, config.JWT_SECRET, { expiresIn: config.JWT_EXPIRES_IN as any });
 };
+
+export const createGoogleUser = async ({ fullname, email }: { fullname: string, email: string }) => {
+    const existingUser = await User.findOne({ email: email } as any);
+    if (existingUser) {
+        throw new ApiError(400, "User with this email already exists");
+    }
+    const user = await User.create({ fullname, email, isVerified: true, provider: "google" });
+    return user
+}

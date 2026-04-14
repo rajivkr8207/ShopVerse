@@ -31,22 +31,6 @@ export const createProductValidator = [
     body("category")
         .notEmpty().withMessage("Category is required")
         .isMongoId().withMessage("Invalid category ID"),
-
-    body("images")
-        .isArray({ min: 1 }).withMessage("At least one image required")
-        .custom((images) => {
-            if (images.length > 4) {
-                throw new Error("Maximum 4 images allowed");
-            }
-            return true;
-        }),
-
-    body("images.*")
-        .isURL().withMessage("Each image must be a valid URL"),
-
-    body("stock")
-        .notEmpty().withMessage("Stock is required")
-        .isInt({ min: 0 }).withMessage("Stock must be positive integer"),
     validateRequest
 ];
 
@@ -82,25 +66,6 @@ export const updateProductValidator = [
     body("category")
         .optional()
         .isMongoId().withMessage("Invalid category ID"),
-
-    body("images")
-        .optional()
-        .isArray()
-        .custom((images) => {
-            if (images.length > 4) {
-                throw new Error("Maximum 4 images allowed");
-            }
-            return true;
-        }),
-
-    body("images.*")
-        .optional()
-        .isURL(),
-
-    body("stock")
-        .optional()
-        .isInt({ min: 0 }),
-
     body("isActive")
         .optional()
         .isBoolean(),

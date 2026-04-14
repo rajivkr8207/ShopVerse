@@ -5,8 +5,10 @@ export interface CreateProductInput {
     price: number;
     discountPrice?: number;
     category: string;
-    images: string[];
-    stock: number;
+    images: {
+        url: string;
+        thumbnailUrl: string;
+    }[];
 }
 
 export interface UpdateProductInput {
@@ -16,7 +18,9 @@ export interface UpdateProductInput {
     price?: number;
     discountPrice?: number;
     category?: string;
-    images?: string[];
-    stock?: number;
+    images?: {
+        url: string;
+        thumbnailUrl: string;
+    }[];
     isActive?: boolean;
 }

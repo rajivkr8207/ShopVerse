@@ -3,20 +3,34 @@ import { productService } from "../services/product.service.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { UploadImageToImageKit } from "../services/storage.service.js";
+
+type fileType = {
+    fieldname: string;
+    originalname: string;
+    encoding: string;
+    mimetype: string;
+    buffer: Buffer;
+    size: number;
+}
 
 export const createProduct = asyncHandler(async (req: Request, res: Response) => {
     const data = req.body;
-
+    const { name, price, description, brand, category, discountPrice } = req.body
     if (!data.name || !data.price || !data.category) {
         throw new ApiError(400, "Required fields missing");
     }
-
     if (data.images && data.images.length > 4) {
         throw new ApiError(400, "Maximum 4 images allowed");
     }
-
-    const product = await productService.createProduct(data);
-
+    const images = await Promise.all((req.files as fileType[]).map(async (file: fileType) => {
+        const uploadResult = await UploadImageToImageKit({ buffer: file.buffer, fileName: file.originalname, folderPath: "stinch" });
+        return {
+            url: uploadResult.url,
+            thumbnailUrl: uploadResult.thumbnailUrl
+        };
+    }));
+    const product = await productService.createProduct({ name, price, description, brand, category, images, discountPrice });
     return res.status(201).json(
         new ApiResponse(201, product, "Product created successfully")
     );

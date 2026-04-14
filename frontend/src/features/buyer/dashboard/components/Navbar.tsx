@@ -1,12 +1,13 @@
 import React from "react";
 import { ShoppingCart, Bell, User, Search } from "lucide-react";
 import { useSelector } from "react-redux";
-import type { AuthState, IUser } from "../../auth/types/auth.type";
+import type { IUser } from "../../../auth/types/auth.type";
+import type { RootState } from "../../../../app/app.store";
 import { useNavigate } from "react-router-dom";
 
 const Navbar: React.FC = () => {
     const navigate = useNavigate()
-    const user = useSelector((state: AuthState) => state.auth.user) as IUser | null;
+    const user = useSelector((state: RootState) => state.auth.user) as IUser | null;
     return (
         <nav
             className="w-full flex items-center justify-between px-6 py-3"

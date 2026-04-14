@@ -67,7 +67,7 @@ const getEmailTemplate = (
 `;
 
 export const verifyEmailsendemail = async (email: string, name: string, otp: string) => {
-    const url = `${config.FRONTEND_URL}/verify-email?otp=${otp}`;
+    const url = `${config.FRONTEND_URL}/verify-email?email=${email}`;
     try {
         const mailoptions = {
             from: `${config.FROM_EMAIL}`,
