@@ -76,11 +76,7 @@ export const getMe = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const logout = asyncHandler(async (req: Request, res: Response) => {
-    res.cookie("snitch_token", "none", {
-        ...cookieOptions,
-        expires: new Date(Date.now() + 10 * 1000), // expires in 10 seconds
-        httpOnly: true,
-    });
+    res.clearCookie("snitch_token");
 
     return res.status(200).json(
         new ApiResponse(200, {}, "User logged out successfully")

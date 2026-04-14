@@ -7,8 +7,10 @@ export interface IProduct extends Document {
     price: number;
     discountPrice?: number;
     category: Types.ObjectId;
-    images: string[];
-    stock: number;
+    images: {
+        url: string;
+        thumbnailUrl: string;
+    }[];
     isActive: boolean;
     createdAt: Date;
     updatedAt: Date;
@@ -41,29 +43,24 @@ const productSchema = new Schema<IProduct>(
             type: Number,
         },
 
-        // 🔗 FK → Category
         category: {
             type: Schema.Types.ObjectId,
             ref: "Category",
             required: true,
         },
 
-        // 🖼️ Max 4 images (links)
-        images: {
-            type: [String],
-            validate: {
-                validator: function (val: string[]) {
-                    return val.length <= 4;
+        images: [
+            {
+                url: {
+                    type: String,
+                    required: true,
                 },
-                message: "Maximum 4 images allowed",
-            },
-        },
-
-        stock: {
-            type: Number,
-            required: true,
-            default: 0,
-        },
+                thumbnailUrl: {
+                    type: String,
+                    required: true,
+                },
+            }
+        ],
 
         isActive: {
             type: Boolean,

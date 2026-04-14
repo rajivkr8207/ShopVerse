@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useLocation, Link } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import { motion } from "framer-motion";
-import { Mail, CheckCircle2, ArrowLeft, RefreshCw, Key } from "lucide-react";
+import { CheckCircle2, ArrowLeft, RefreshCw, Key } from "lucide-react";
 import Button from "../../../components/common/Button";
 
 const VerifyEmail = () => {

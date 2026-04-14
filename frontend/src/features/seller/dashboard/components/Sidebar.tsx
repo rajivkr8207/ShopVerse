@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, Package, ShoppingCart, X } from "lucide-react";
+import { LayoutDashboard, Package, ShoppingCart, X, Layers } from "lucide-react";
 import { useSelector } from "react-redux";
 
 const Sidebar = () => {
@@ -30,19 +30,28 @@ const Sidebar = () => {
                 </div>
 
                 <nav className="p-4 flex flex-col gap-3">
-                    <NavLink to="/seller/dashboard" className="nav-item">
+                    <NavLink to="/seller/dashboard" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                         <LayoutDashboard size={18} /> Dashboard
                     </NavLink>
 
-                    <NavLink to="/seller/products" className="nav-item">
+                    <NavLink to="/seller/categories" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                        <LayoutDashboard size={18} /> Categories
+                    </NavLink>
+
+                    <NavLink to="/seller/products" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                         <Package size={18} /> Products
                     </NavLink>
 
-                    <NavLink to="/seller/orders" className="nav-item">
+                    <NavLink to="/seller/variants" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                        <Layers size={18} /> Variants
+                    </NavLink>
+
+                    <NavLink to="/seller/orders" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                         <ShoppingCart size={18} /> Orders
                     </NavLink>
                 </nav>
             </aside>
+
         </>
     );
 };

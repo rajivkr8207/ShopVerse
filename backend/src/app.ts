@@ -21,11 +21,14 @@ app.get('/', (req, res) => {
 
 
 
+import ProductVariantRouter from './routes/productVariant.routes.js'
+
 app.use('/api/v1', HealthRouter)
 app.use('/api/v1/auth', AuthRouter)
 app.use('/api/v1/cart', cartRouter)
 app.use('/api/v1/category', CategoryRouter)
 app.use('/api/v1/product', ProductRouter)
+app.use('/api/v1/product-variant', ProductVariantRouter)
 app.use('/api/v1/password-reset', PasswordResetRouter)
 app.use(errorMiddleware);
 
