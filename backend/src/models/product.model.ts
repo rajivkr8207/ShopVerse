@@ -4,13 +4,7 @@ export interface IProduct extends Document {
     name: string;
     description: string;
     brand: string;
-    price: number;
-    discountPrice?: number;
     category: Types.ObjectId;
-    images: {
-        url: string;
-        thumbnailUrl: string;
-    }[];
     isActive: boolean;
     createdAt: Date;
     updatedAt: Date;
@@ -34,33 +28,11 @@ const productSchema = new Schema<IProduct>(
             required: true,
         },
 
-        price: {
-            type: Number,
-            required: true,
-        },
-
-        discountPrice: {
-            type: Number,
-        },
-
         category: {
             type: Schema.Types.ObjectId,
             ref: "Category",
             required: true,
         },
-
-        images: [
-            {
-                url: {
-                    type: String,
-                    required: true,
-                },
-                thumbnailUrl: {
-                    type: String,
-                    required: true,
-                },
-            }
-        ],
 
         isActive: {
             type: Boolean,

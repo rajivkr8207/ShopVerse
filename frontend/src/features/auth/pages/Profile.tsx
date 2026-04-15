@@ -60,6 +60,7 @@ const Profile = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
                         {/* Info Cards */}
+                        <InfoItem icon={User} label="Role" value={user?.role} />
                         <InfoItem icon={Mail} label="Email Address" value={user?.email} />
                         <InfoItem icon={Phone} label="Contact Number" value={user?.contact} />
                         <InfoItem icon={MapPin} label="Location" value="India" />

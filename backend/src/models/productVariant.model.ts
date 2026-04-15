@@ -5,7 +5,12 @@ export interface IProductVariant extends Document {
     size: "S" | "M" | "L" | "XL" | "XXL";
     color: string;
     stock: number;
-    price?: number; // override price
+    price: number;
+    discountPrice?: number;
+    images: {
+        url: string;
+        thumbnailUrl: string;
+    }[];
     sku: string;
     createdAt: Date;
     updatedAt: Date;
@@ -37,12 +42,22 @@ const productVariantSchema = new Schema<IProductVariant>(
             default: 0,
             min: 0,
         },
-
         price: {
             type: Number,
             min: 0,
         },
-
+        images: [
+            {
+                url: {
+                    type: String,
+                    required: true,
+                },
+                thumbnailUrl: {
+                    type: String,
+                    required: true,
+                },
+            }
+        ],
         sku: {
             type: String,
             required: true,
