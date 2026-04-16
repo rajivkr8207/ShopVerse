@@ -7,10 +7,6 @@ export interface IProductVariant extends Document {
     stock: number;
     price: number;
     discountPrice?: number;
-    images: {
-        url: string;
-        thumbnailUrl: string;
-    }[];
     sku: string;
     createdAt: Date;
     updatedAt: Date;
@@ -22,18 +18,22 @@ const productVariantSchema = new Schema<IProductVariant>(
             type: Schema.Types.ObjectId,
             ref: "Product",
             required: true,
+            index: true,
         },
 
         size: {
             type: String,
             enum: ["S", "M", "L", "XL", "XXL"],
             required: true,
+            index: true,
         },
 
         color: {
             type: String,
             required: true,
             trim: true,
+            lowercase: true,
+            index: true,
         },
 
         stock: {
@@ -42,22 +42,17 @@ const productVariantSchema = new Schema<IProductVariant>(
             default: 0,
             min: 0,
         },
+
         price: {
             type: Number,
+            required: true,
             min: 0,
         },
-        images: [
-            {
-                url: {
-                    type: String,
-                    required: true,
-                },
-                thumbnailUrl: {
-                    type: String,
-                    required: true,
-                },
-            }
-        ],
+        discountPrice: {
+            type: Number,
+            min: 0
+        },
+
         sku: {
             type: String,
             required: true,
@@ -69,6 +64,11 @@ const productVariantSchema = new Schema<IProductVariant>(
     {
         timestamps: true,
     }
+);
+
+productVariantSchema.index(
+    { productId: 1, size: 1, color: 1 },
+    { unique: true }
 );
 
 export const ProductVariant = mongoose.model<IProductVariant>(

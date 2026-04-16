@@ -11,18 +11,12 @@ export const productService = {
         return response.data;
     },
 
-    async createProduct(formData: FormData) {
-        // Use multipart/form-data for image upload
-        const response = await api.post("/product", formData, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
-        });
+    async createProduct(data: any) {
+        const response = await api.post("/product", data);
         return response.data;
     },
 
     async updateProduct(id: string, data: any) {
-        // If updating without images, can use regular JSON
         const response = await api.put(`/product/${id}`, data);
         return response.data;
     },

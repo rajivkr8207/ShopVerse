@@ -9,11 +9,16 @@ import SellerDashboardHome from "../features/seller/dashboard/pages/SellerDashbo
 import ProductsPage from "../features/seller/dashboard/pages/ProductsPage";
 import CategoriesPage from "../features/seller/dashboard/pages/CategoriesPage";
 import ProductVariantsPage from "../features/seller/dashboard/pages/ProductVariantsPage";
+import ProductDetailsPage from "../features/buyer/dashboard/pages/ProductDetailsPage";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <Dashboard />,
+  },
+  {
+    path: "/products/:id",
+    element: <ProductDetailsPage />,
   },
   {
     path: "/register",

@@ -23,9 +23,8 @@ const ProductsPage = () => {
         name: "",
         description: "",
         brand: "",
-        price: "",
         category: "",
-        discountPrice: "",
+        basePrice: "",
     });
     const [images, setImages] = useState<FileList | null>(null);
 
@@ -41,13 +40,12 @@ const ProductsPage = () => {
                 name: product.name,
                 description: product.description,
                 brand: product.brand,
-                price: product.price,
                 category: product.category._id || product.category,
-                discountPrice: product.discountPrice || "",
+                basePrice: product.basePrice || "",
             });
         } else {
             setEditingId(null);
-            setFormData({ name: "", description: "", brand: "", price: "", category: "", discountPrice: "" });
+            setFormData({ name: "", description: "", brand: "", category: "", basePrice: "" });
         }
         setImages(null);
         setIsModalOpen(true);
@@ -55,28 +53,23 @@ const ProductsPage = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
+        const fData = new FormData();
+        fData.append("name", formData.name);
+        fData.append("description", formData.description);
+        fData.append("brand", formData.brand);
+        fData.append("category", formData.category);
+        fData.append("basePrice", formData.basePrice.toString());
+        if (images) {
+            for (let i = 0; i < images.length; i++) {
+                fData.append("images", images[i]);
+            }
+        }
         if (editingId) {
-            // Update logic (simplified for text-fields, file upload during edit need special handling on backend typically)
-            await dispatch(editProduct({ id: editingId, data: formData }));
+            await dispatch(editProduct({ id: editingId, data: fData as any }));
             toast.success("Product updated successfully");
         } else {
-            // Create uses multipart format
-            const fData = new FormData();
-            fData.append("name", formData.name);
-            fData.append("description", formData.description);
-            fData.append("brand", formData.brand);
-            fData.append("price", formData.price);
-            fData.append("category", formData.category);
-            if (formData.discountPrice) fData.append("discountPrice", formData.discountPrice);
-
-            if (images) {
-                for (let i = 0; i < images.length; i++) {
-                    fData.append("images", images[i]);
-                }
-            }
             try {
-                await dispatch(addProduct(fData)).unwrap();
+                await dispatch(addProduct(fData as any)).unwrap();
                 toast.success("Product added successfully");
             } catch (err: any) {
                 toast.error(err || "Failed to add product");
@@ -93,10 +86,8 @@ const ProductsPage = () => {
     };
 
     const columns = [
-        { header: "Image", cell: (row: any) => row.images?.[0]?.thumbnailUrl ? <img src={row.images[0].thumbnailUrl} alt={row.name} className="w-10 h-10 object-cover rounded-md" /> : <div className="w-10 h-10 bg-gray-700 rounded-md"></div> },
         { header: "Name", accessorKey: "name" },
         { header: "Brand", accessorKey: "brand" },
-        { header: "Price", cell: (row: any) => `$${row.price}` },
         { header: "Category", cell: (row: any) => row.category?.name || "N/A" },
         {
             header: "Actions",
@@ -150,12 +141,8 @@ const ProductsPage = () => {
                             <input required type="text" value={formData.brand} onChange={(e) => setFormData({ ...formData, brand: e.target.value })} className="w-full p-2 bg-neutral-800 border border-neutral-700 rounded-lg text-white" />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium mb-1">Price</label>
-                            <input required type="number" min="0" value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} className="w-full p-2 bg-neutral-800 border border-neutral-700 rounded-lg text-white" />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Discount Price (Optional)</label>
-                            <input type="number" min="0" value={formData.discountPrice} onChange={(e) => setFormData({ ...formData, discountPrice: e.target.value })} className="w-full p-2 bg-neutral-800 border border-neutral-700 rounded-lg text-white" />
+                            <label className="block text-sm font-medium mb-1">Base Price</label>
+                            <input required type="number" min="0" value={formData.basePrice} onChange={(e) => setFormData({ ...formData, basePrice: e.target.value })} className="w-full p-2 bg-neutral-800 border border-neutral-700 rounded-lg text-white" />
                         </div>
                     </div>
 
@@ -181,7 +168,10 @@ const ProductsPage = () => {
                         </div>
                     )}
 
-                    <button type="submit" className="mt-4 px-4 py-2 font-medium bg-blue-600 hover:bg-blue-700 rounded-lg transition" style={{ backgroundColor: "var(--primary)", color: "var(--secondary)" }}>
+
+                    <button type="submit"
+                        disabled={loading}
+                        className="mt-4 px-4 py-2 font-medium bg-blue-600 hover:bg-blue-700 rounded-lg transition" style={{ backgroundColor: "var(--primary)", color: "var(--secondary)" }}>
                         {editingId ? "Update Product" : "Create Product"}
                     </button>
                 </form>

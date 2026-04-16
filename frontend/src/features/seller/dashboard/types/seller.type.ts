@@ -10,15 +10,14 @@ export interface IProduct {
     name: string;
     description: string;
     brand: string;
-    price: number;
-    discountPrice?: number;
     category: ICategory | string;
-    images: {
+    isActive: boolean;
+    createdAt: string;
+    basePrice?: number;
+    images?: {
         url: string;
         thumbnailUrl: string;
     }[];
-    isActive: boolean;
-    createdAt: string;
 }
 
 export interface IProductVariant {
@@ -28,7 +27,12 @@ export interface IProductVariant {
     color: string;
     stock: number;
     price?: number;
+    discountPrice?: number;
     sku: string;
+    images: {
+        url: string;
+        thumbnailUrl: string;
+    }[];
 }
 
 export type SidebarState = {
