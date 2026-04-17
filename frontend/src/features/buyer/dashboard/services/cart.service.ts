@@ -7,6 +7,7 @@ export const cartService = {
     },
 
     async addToCart(data: { productId: string; variantId?: string; quantity: number }) {
+        console.log(data);
         const response = await api.post("/cart", data);
         return response.data;
     },

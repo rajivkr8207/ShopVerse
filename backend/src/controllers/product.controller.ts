@@ -41,7 +41,6 @@ export const createProduct = asyncHandler(async (req: Request, res: Response) =>
 
 export const getProducts = asyncHandler(async (_req: Request, res: Response) => {
     const products = await productService.getAllProducts();
-
     return res.status(200).json(
         new ApiResponse(200, products, "Products fetched successfully")
     );
