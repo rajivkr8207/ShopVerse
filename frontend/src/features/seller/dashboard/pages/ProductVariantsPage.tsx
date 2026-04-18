@@ -25,6 +25,7 @@ const ProductVariantsPage = () => {
         color: "",
         stock: 0,
         price: "",
+        discountPrice: "",
         sku: "",
     });
 
@@ -42,26 +43,35 @@ const ProductVariantsPage = () => {
                 color: variant.color,
                 stock: variant.stock,
                 price: variant.price || "",
+                discountPrice: variant.discountPrice || "",
                 sku: variant.sku,
             });
         } else {
             setEditingId(null);
-            setFormData({ productId: "", size: "M", color: "", stock: 0, price: "", sku: "" });
+            setFormData({ productId: "", size: "M", color: "", stock: 0, price: "", discountPrice: "", sku: "" });
         }
         setIsModalOpen(true);
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const payload: any = { ...formData };
-        if (payload.price === "") delete payload.price;
+
+        const fData = new FormData();
+        fData.append("productId", formData.productId);
+        fData.append("sku", formData.sku);
+        fData.append("size", formData.size);
+        fData.append("color", formData.color);
+        fData.append("stock", formData.stock.toString());
+        if (formData.price) fData.append("price", formData.price);
+        if (formData.discountPrice) fData.append("discountPrice", formData.discountPrice);
+
 
         if (editingId) {
-            await dispatch(editVariant({ id: editingId, data: payload }));
+            await dispatch(editVariant({ id: editingId, data: fData as any }));
             toast.success("Variant updated");
         } else {
             try {
-                await dispatch(addVariant(payload)).unwrap();
+                await dispatch(addVariant(fData as any)).unwrap();
                 toast.success("Variant added");
             } catch (error: any) {
                 toast.error(error);
@@ -161,11 +171,16 @@ const ProductVariantsPage = () => {
                         </div>
                     </div>
 
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Override Price (Optional)</label>
-                        <input type="number" min="0" value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} className="w-full p-2 bg-neutral-800 border border-neutral-700 rounded-lg text-white" />
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium mb-1">Override Price (Optional)</label>
+                            <input type="number" min="0" value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} className="w-full p-2 bg-neutral-800 border border-neutral-700 rounded-lg text-white" />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium mb-1">Discount Price (Optional)</label>
+                            <input type="number" min="0" value={formData.discountPrice} onChange={(e) => setFormData({ ...formData, discountPrice: e.target.value })} className="w-full p-2 bg-neutral-800 border border-neutral-700 rounded-lg text-white" />
+                        </div>
                     </div>
-
                     <button type="submit" className="mt-4 px-4 py-2 font-medium bg-blue-600 hover:bg-blue-700 rounded-lg transition" style={{ backgroundColor: "var(--primary)", color: "var(--secondary)" }}>
                         {editingId ? "Update Variant" : "Create Variant"}
                     </button>

@@ -8,7 +8,7 @@ export const createVariantValidator = [
 
     body("size")
         .notEmpty()
-        .isIn(["S", "M", "L", "XL"]).withMessage("Invalid size"),
+        .isIn(["S", "M", "L", "XL", "XXL"]).withMessage("Invalid size"),
 
     body("color")
         .notEmpty().withMessage("Color required"),
@@ -20,10 +20,13 @@ export const createVariantValidator = [
     body("price")
         .optional()
         .isFloat({ min: 0 }).withMessage("Invalid price"),
-
+    body("discountPrice")
+        .optional()
+        .isFloat({ min: 0 }).withMessage("Invalid discount price"),
     body("sku")
         .notEmpty().withMessage("SKU required")
         .isLength({ min: 3 }).withMessage("SKU too short"),
+
     validateRequest
 ];
 
@@ -43,7 +46,9 @@ export const updateVariantValidator = [
     body("price")
         .optional()
         .isFloat({ min: 0 }),
-
+    body("discountPrice")
+        .optional()
+        .isFloat({ min: 0 }),
     body("sku")
         .optional()
         .isLength({ min: 3 }),

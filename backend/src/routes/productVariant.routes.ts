@@ -13,12 +13,20 @@ import {
 } from "../validators/productVariant.validator.js";
 import { isSeller } from "../middlewares/isSeller.middleware.js";
 
+import multer from "multer";
+
+const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 1024 * 1024 * 5 }
+});
+
 const router = express.Router();
 
 router.post(
     "/",
     protect,
     isSeller,
+    upload.array("images", 4),
     createVariantValidator,
     createVariant
 );
@@ -26,6 +34,7 @@ router.put(
     "/:id",
     protect,
     isSeller,
+    upload.array("images", 4),
     updateVariantValidator,
     updateVariant
 );

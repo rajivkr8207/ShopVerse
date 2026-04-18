@@ -6,7 +6,6 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 
 export const addToCart = asyncHandler(async (req: Request, res: Response) => {
     const userId = req.user?.id;
-
     if (!userId) {
         throw new ApiError(401, "Unauthorized");
     }

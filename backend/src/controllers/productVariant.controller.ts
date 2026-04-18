@@ -3,9 +3,32 @@ import { productVariantService } from "../services/productVariant.service.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { UploadImageToImageKit } from "../services/storage.service.js";
+
+type fileType = {
+    fieldname: string;
+    originalname: string;
+    encoding: string;
+    mimetype: string;
+    buffer: Buffer;
+    size: number;
+}
 
 export const createVariant = asyncHandler(async (req: Request, res: Response) => {
-    const variant = await productVariantService.createVariant(req.body);
+    const { productId, size, color, stock, price, discountPrice, sku } = req.body;
+    const data: any = {
+        productId,
+        size,
+        color,
+        sku,
+        stock: Number(stock),
+        price: Number(price),
+    };
+
+    if (discountPrice !== undefined && discountPrice !== "") {
+        data.discountPrice = Number(discountPrice);
+    }
+    const variant = await productVariantService.createVariant(data);
 
     return res.status(201).json(
         new ApiResponse(201, variant, "Variant created successfully")
@@ -36,8 +59,16 @@ export const getVariant = asyncHandler(async (req: Request, res: Response) => {
 
 export const updateVariant = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
+    const data = { ...req.body };
 
-    const variant = await productVariantService.updateVariant(id as string, req.body);
+    if (data.stock !== undefined) data.stock = Number(data.stock);
+    if (data.price !== undefined) data.price = Number(data.price);
+    if (data.discountPrice !== undefined && data.discountPrice !== "") {
+        data.discountPrice = Number(data.discountPrice);
+    } else if (data.discountPrice === "") {
+        data.discountPrice = null;
+    }
+    const variant = await productVariantService.updateVariant(id as string, data);
 
     if (!variant) {
         throw new ApiError(404, "Variant not found");

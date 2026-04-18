@@ -15,9 +15,6 @@ export const addToCartValidator = [
         .notEmpty()
         .isInt({ min: 1 }).withMessage("Quantity must be >= 1"),
 
-    body("price")
-        .notEmpty()
-        .isFloat({ min: 0 }).withMessage("Invalid price"),
     validateRequest
 ];
 

@@ -6,7 +6,7 @@ export const cartService = {
         const existing = await Cart.findOne({
             userId,
             productId: data.productId,
-            variantId: data.variantId || null,
+            variantId: data.variantId,
         });
 
         if (existing) {

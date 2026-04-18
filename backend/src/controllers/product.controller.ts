@@ -15,14 +15,17 @@ type fileType = {
 }
 
 export const createProduct = asyncHandler(async (req: Request, res: Response) => {
-    const data = req.body;
-    const { name, price, description, brand, category, discountPrice } = req.body
-    if (!data.name || !data.price || !data.category) {
+    const { name, basePrice, description, brand, category } = req.body
+
+    if (!name || basePrice === undefined || basePrice === null || !category) {
         throw new ApiError(400, "Required fields missing");
     }
-    if (data.images && data.images.length > 4) {
-        throw new ApiError(400, "Maximum 4 images allowed");
+
+    const numericBasePrice = Number(basePrice);
+    if (isNaN(numericBasePrice)) {
+        throw new ApiError(400, "Base price must be a valid number");
     }
+
     const images = await Promise.all((req.files as fileType[]).map(async (file: fileType) => {
         const uploadResult = await UploadImageToImageKit({ buffer: file.buffer, fileName: file.originalname, folderPath: "stinch" });
         return {
@@ -30,7 +33,7 @@ export const createProduct = asyncHandler(async (req: Request, res: Response) =>
             thumbnailUrl: uploadResult.thumbnailUrl
         };
     }));
-    const product = await productService.createProduct({ name, price, description, brand, category, images, discountPrice });
+    const product = await productService.createProduct({ name, basePrice: numericBasePrice, description, brand, category, images });
     return res.status(201).json(
         new ApiResponse(201, product, "Product created successfully")
     );
@@ -38,7 +41,6 @@ export const createProduct = asyncHandler(async (req: Request, res: Response) =>
 
 export const getProducts = asyncHandler(async (_req: Request, res: Response) => {
     const products = await productService.getAllProducts();
-
     return res.status(200).json(
         new ApiResponse(200, products, "Products fetched successfully")
     );
@@ -60,8 +62,28 @@ export const getProduct = asyncHandler(async (req: Request, res: Response) => {
 
 export const updateProduct = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
+    const data = { ...req.body };
 
-    const product = await productService.updateProduct(id as string, req.body);
+    if (data.basePrice !== undefined) {
+        data.basePrice = Number(data.basePrice);
+        if (isNaN(data.basePrice)) {
+            throw new ApiError(400, "Base price must be a valid number");
+        }
+    }
+
+    // Handle images if any are uploaded
+    if (req.files && (req.files as fileType[]).length > 0) {
+        const images = await Promise.all((req.files as fileType[]).map(async (file: fileType) => {
+            const uploadResult = await UploadImageToImageKit({ buffer: file.buffer, fileName: file.originalname, folderPath: "stinch" });
+            return {
+                url: uploadResult.url,
+                thumbnailUrl: uploadResult.thumbnailUrl
+            };
+        }));
+        data.images = images;
+    }
+
+    const product = await productService.updateProduct(id as string, data);
 
     if (!product) {
         throw new ApiError(404, "Product not found");
