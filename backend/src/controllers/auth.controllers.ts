@@ -77,7 +77,6 @@ export const getMe = asyncHandler(async (req: Request, res: Response) => {
 
 export const logout = asyncHandler(async (req: Request, res: Response) => {
     res.clearCookie("snitch_token");
-
     return res.status(200).json(
         new ApiResponse(200, {}, "User logged out successfully")
     );

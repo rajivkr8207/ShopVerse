@@ -6,7 +6,6 @@ import passport from "passport";
 
 const AuthRouter = Router();
 
-// /api/auth/google
 AuthRouter.get("/google",
     passport.authenticate("google", { scope: ["profile", "email"] }))
 

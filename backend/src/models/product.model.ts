@@ -1,73 +1,89 @@
-import mongoose, { Schema, Document, Types } from "mongoose";
+import mongoose, { Schema, Document } from 'mongoose';
+import priceSchema from './price.schema.js';
+
+
 
 export interface IProduct extends Document {
-    name: string;
+    title: string;
     description: string;
-    brand: string;
-    category: Types.ObjectId;
-    basePrice?: number;
-    images: {
+    seller: string;
+    price: {
+        amount: number;
+        currency: string;
+    };
+    images: Array<{
         url: string;
-        thumbnailUrl: string;
-    }[];
-    isActive?: boolean;
-    createdAt?: Date;
-    updatedAt?: Date;
+    }>;
+    variants: Array<{
+        images: Array<{
+            url: string;
+        }>;
+        stock: number;
+        attributes: Map<string, string>;
+        price?: {
+            amount: number;
+            currency: string;
+        };
+    }>;
+    provider: "local" | "google";
+    googleId?: string
 }
 
-const productSchema = new Schema<IProduct>(
-    {
-        name: {
-            type: String,
-            required: true,
-            trim: true,
-            index: true,
-        },
 
-        description: {
-            type: String,
-            required: true,
-        },
 
-        brand: {
-            type: String,
-            required: true,
-            index: true,
-        },
-
-        category: {
-            type: Schema.Types.ObjectId,
-            ref: "Category",
-            required: true,
-            index: true,
-        },
-
-        basePrice: {
-            type: Number,
-            min: 0,
-        },
-        images: [
-            {
-                url: {
-                    type: String,
-                    required: true,
-                },
-                thumbnailUrl: {
-                    type: String,
-                    required: true,
-                },
-            }
-        ],
-
-        isActive: {
-            type: Boolean,
-            default: true,
-            index: true,
-        },
+const productSchema = new Schema<IProduct>({
+    title: {
+        type: String,
+        required: true
     },
-    {
-        timestamps: true,
-    }
-);
+    description: {
+        type: String,
+        required: true
+    },
+    seller: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    price: {
+        type: priceSchema,
+        required: true
+    },
+    images: [
+        {
+            url: {
+                type: String,
+                required: true
+            }
+        }
+    ],
+    variants: [
+        {
+            images: [
+                {
+                    url: {
+                        type: String,
+                        required: true
+                    }
+                }
+            ],
+            stock: {
+                type: Number,
+                default: 0
+            },
+            attributes: {
+                type: Map,
+                of: String
+            },
+            price: {
+                type: priceSchema,
+            }
+        },
 
-export const Product = mongoose.model<IProduct>("Product", productSchema);
+    ]
+}, { timestamps: true })
+
+
+const productModel = mongoose.model<IProduct>('product', productSchema);
+
+export default productModel;

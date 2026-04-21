@@ -4,13 +4,7 @@ import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { config } from "../config/config.js";
 
-declare global {
-    namespace Express {
-        interface Request {
-            user?: { id: string, role: string }
-        }
-    }
-}
+
 
 export const protect = async (req: Request, res: Response, next: NextFunction) => {
     let token = req.cookies.snitch_token;
