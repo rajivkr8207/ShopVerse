@@ -3,6 +3,8 @@ import { errorMiddleware } from './middlewares/error.middleware.js'
 import HealthRouter from './routes/healthcheck.route.js'
 import { Middleware } from './middleware.js'
 import AuthRouter from './routes/auth.route.js'
+import ProductRouter from './routes/product.route.js'
+import CategoryRouter from './routes/category.route.js'
 
 
 const app = express()
@@ -20,6 +22,8 @@ app.get('/', (req, res) => {
 
 app.use('/api/v1', HealthRouter)
 app.use('/api/v1/auth', AuthRouter)
+app.use('/api/v1/product', ProductRouter)
+app.use('/api/v1/category', CategoryRouter)
 
 app.use(errorMiddleware);
 

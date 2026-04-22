@@ -13,6 +13,7 @@ AuthRouter.get("/google/callback",
     passport.authenticate("google", { session: false }),
     googleCallback
 )
+
 AuthRouter.post("/register", registerValidator, register);
 AuthRouter.post("/verify-email", verifyEmail);
 AuthRouter.post("/login", loginValidator, login);

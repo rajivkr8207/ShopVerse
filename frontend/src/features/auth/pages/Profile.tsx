@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import useAuth from "../hooks/useAuth";
-import type { AuthState, IUser } from "../types/auth.type";
+import type { IUser } from "../types/auth.type";
 import { useSelector } from "react-redux";
 import Button from "../../../components/common/Button";
 import { motion } from "framer-motion";

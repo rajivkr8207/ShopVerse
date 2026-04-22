@@ -1,35 +1,17 @@
-import mongoose, { Schema, Document } from 'mongoose';
-import priceSchema from './price.schema.js';
-
-
+import mongoose, { Schema, Document, Types } from 'mongoose';
 
 export interface IProduct extends Document {
     title: string;
     description: string;
-    seller: string;
-    price: {
-        amount: number;
-        currency: string;
-    };
-    images: Array<{
+    seller: Types.ObjectId;
+    price: number;
+    images: {
         url: string;
-    }>;
-    variants: Array<{
-        images: Array<{
-            url: string;
-        }>;
-        stock: number;
-        attributes: Map<string, string>;
-        price?: {
-            amount: number;
-            currency: string;
-        };
-    }>;
-    provider: "local" | "google";
-    googleId?: string
+        thumbnailUrl: string;
+    }[];
+    brand?: string;
+    category?: string | Types.ObjectId;
 }
-
-
 
 const productSchema = new Schema<IProduct>({
     title: {
@@ -46,7 +28,7 @@ const productSchema = new Schema<IProduct>({
         required: true
     },
     price: {
-        type: priceSchema,
+        type: Number,
         required: true
     },
     images: [
@@ -54,33 +36,18 @@ const productSchema = new Schema<IProduct>({
             url: {
                 type: String,
                 required: true
+            },
+            thumbnailUrl: {
+                type: String,
+                required: true
             }
         }
     ],
-    variants: [
-        {
-            images: [
-                {
-                    url: {
-                        type: String,
-                        required: true
-                    }
-                }
-            ],
-            stock: {
-                type: Number,
-                default: 0
-            },
-            attributes: {
-                type: Map,
-                of: String
-            },
-            price: {
-                type: priceSchema,
-            }
-        },
-
-    ]
+    brand: String,
+    category: {
+        type: Schema.Types.ObjectId,
+        ref: 'Category'
+    }
 }, { timestamps: true })
 
 

@@ -6,7 +6,8 @@ export const isSeller = (req: Request, res: Response, next: NextFunction) => {
         throw new ApiError(401, "Unauthorized. Please login first.");
     }
 
-    if (req.user.role !== "seller") {
+    const user = req.user as any;
+    if (user.role !== "seller") {
         throw new ApiError(403, "Access denied. Seller only route.");
     }
 

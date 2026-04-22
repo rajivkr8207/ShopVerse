@@ -1,22 +1,25 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "../../../../app/app.store";
-import { fetchProducts } from "../product.slice";
-import { fetchCategories } from "../category.slice";
-import { fetchVariants } from "../productVariant.slice";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../../../app/app.store";
 import { Package, Tag, Layers } from "lucide-react";
+import useCategory from "../hooks/useCategory";
+import useProduct from "../hooks/useProduct";
+import useVariant from "../hooks/useVariant";
 
 const SellerDashboardHome = () => {
-    const dispatch = useDispatch<AppDispatch>();
     const { products } = useSelector((state: RootState) => state.product);
     const { categories } = useSelector((state: RootState) => state.category);
     const { variants } = useSelector((state: RootState) => state.productVariant);
+    
+    const { handleGetAllCategories } = useCategory();
+    const { handleGetAllProducts } = useProduct();
+    const { handleGetAllVariants } = useVariant();
 
     useEffect(() => {
-        dispatch(fetchProducts());
-        dispatch(fetchCategories());
-        dispatch(fetchVariants());
-    }, [dispatch]);
+        handleGetAllProducts();
+        handleGetAllCategories();
+        handleGetAllVariants();
+    }, []);
 
     return (
         <div>

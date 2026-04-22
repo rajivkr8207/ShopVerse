@@ -2,9 +2,9 @@ import { Redis } from "ioredis";
 import { config } from "./config.js";
 
 const redis = new Redis({
-    host: config.REDIS_HOST,
-    port: parseInt(config.REDIS_PORT as string, 10),
-    password: config.REDIS_PASSWORD,
+    host: config.REDIS_HOST || "127.0.0.1",
+    port: parseInt(config.REDIS_PORT as string, 10) || 6379,
+    password: config.REDIS_PASSWORD || undefined,
     maxRetriesPerRequest: null,
 })
 // 

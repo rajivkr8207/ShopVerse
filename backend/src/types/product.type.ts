@@ -1,24 +1,28 @@
+import type { Types } from "mongoose";
+
 export interface CreateProductInput {
-    name: string;
+    title: string;
     description: string;
-    brand: string;
-    category: string;
-    basePrice?: number;
+    seller: Types.ObjectId;
+    price: number;
     images: {
         url: string;
         thumbnailUrl: string;
     }[];
+    brand?: string;
+    category?: string | Types.ObjectId;
 }
 
+
 export interface UpdateProductInput {
-    name?: string;
+    title?: string;
     description?: string;
     brand?: string;
-    basePrice?: number;
-    category?: string;
+    category?: string | Types.ObjectId;
     images?: {
         url: string;
-        thumbnailUrl: string;
+        thumbnailUrl?: string;
     }[];
     isActive?: boolean;
+    price?: number;
 }

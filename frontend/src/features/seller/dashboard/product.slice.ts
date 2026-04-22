@@ -1,5 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { productService } from "./services/product.service";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { IProduct } from "./types/seller.type";
 
 interface ProductState {
@@ -14,64 +13,32 @@ const initialState: ProductState = {
     error: null,
 };
 
-export const fetchProducts = createAsyncThunk("product/fetchAll", async (_, thunkAPI) => {
-    try {
-        const response = await productService.getProducts();
-        return response.data;
-    } catch (error: any) {
-        return thunkAPI.rejectWithValue(error.response?.data?.message || "Failed to fetch products");
-    }
-});
-
-export const addProduct = createAsyncThunk("product/add", async (formData: FormData, thunkAPI) => {
-    try {
-        const response = await productService.createProduct(formData);
-        return response.data;
-    } catch (error: any) {
-        return thunkAPI.rejectWithValue(error.response?.data?.message || "Failed to create product");
-    }
-});
-
-export const editProduct = createAsyncThunk("product/edit", async ({ id, data }: { id: string, data: any }, thunkAPI) => {
-    try {
-        const response = await productService.updateProduct(id, data);
-        return response.data;
-    } catch (error: any) {
-        return thunkAPI.rejectWithValue(error.response?.data?.message || "Failed to update product");
-    }
-});
-
-export const removeProduct = createAsyncThunk("product/remove", async (id: string, thunkAPI) => {
-    try {
-        await productService.deleteProduct(id);
-        return id;
-    } catch (error: any) {
-        return thunkAPI.rejectWithValue(error.response?.data?.message || "Failed to delete product");
-    }
-});
-
 const productSlice = createSlice({
     name: "product",
     initialState,
-    reducers: {},
-    extraReducers: (builder) => {
-        builder
-            // Fetch All
-            .addCase(fetchProducts.pending, (state) => { state.loading = true; state.error = null; })
-            .addCase(fetchProducts.fulfilled, (state, action) => { state.loading = false; state.products = action.payload; })
-            .addCase(fetchProducts.rejected, (state, action) => { state.loading = false; state.error = action.payload as string; })
-            // Add
-            .addCase(addProduct.fulfilled, (state, action) => { state.products.push(action.payload); })
-            // Edit
-            .addCase(editProduct.fulfilled, (state, action) => {
-                const index = state.products.findIndex(p => p._id === action.payload._id);
-                if (index !== -1) state.products[index] = action.payload;
-            })
-            // Remove
-            .addCase(removeProduct.fulfilled, (state, action) => {
-                state.products = state.products.filter(p => p._id !== action.payload);
-            });
+    reducers: {
+        setProducts: (state, action: PayloadAction<IProduct[]>) => {
+            state.products = action.payload;
+            state.loading = false;
+        },
+        addProduct: (state, action: PayloadAction<IProduct>) => {
+            state.products.push(action.payload);
+        },
+        updateProduct: (state, action: PayloadAction<IProduct>) => {
+            const index = state.products.findIndex(p => p._id === action.payload._id);
+            if (index !== -1) state.products[index] = action.payload;
+        },
+        removeProduct: (state, action: PayloadAction<string>) => {
+            state.products = state.products.filter(p => p._id !== action.payload);
+        },
+        setLoading: (state, action: PayloadAction<boolean>) => {
+            state.loading = action.payload;
+        },
+        setError: (state, action: PayloadAction<string | null>) => {
+            state.error = action.payload;
+        }
     }
 });
 
+export const { setProducts, addProduct, updateProduct, removeProduct, setLoading, setError } = productSlice.actions;
 export default productSlice.reducer;

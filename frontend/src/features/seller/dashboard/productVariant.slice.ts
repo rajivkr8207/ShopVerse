@@ -1,5 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { productVariantService } from "./services/productVariant.service";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { IProductVariant } from "./types/seller.type";
 
 interface ProductVariantState {
@@ -14,64 +13,32 @@ const initialState: ProductVariantState = {
     error: null,
 };
 
-export const fetchVariants = createAsyncThunk("productVariant/fetchAll", async (_, thunkAPI) => {
-    try {
-        const response = await productVariantService.getVariants();
-        return response.data;
-    } catch (error: any) {
-        return thunkAPI.rejectWithValue(error.response?.data?.message || "Failed to fetch variants");
-    }
-});
-
-export const addVariant = createAsyncThunk("productVariant/add", async (data: Partial<IProductVariant>, thunkAPI) => {
-    try {
-        const response = await productVariantService.createVariant(data);
-        return response.data;
-    } catch (error: any) {
-        return thunkAPI.rejectWithValue(error.response?.data?.message || "Failed to create variant");
-    }
-});
-
-export const editVariant = createAsyncThunk("productVariant/edit", async ({ id, data }: { id: string, data: Partial<IProductVariant> }, thunkAPI) => {
-    try {
-        const response = await productVariantService.updateVariant(id, data);
-        return response.data;
-    } catch (error: any) {
-        return thunkAPI.rejectWithValue(error.response?.data?.message || "Failed to update variant");
-    }
-});
-
-export const removeVariant = createAsyncThunk("productVariant/remove", async (id: string, thunkAPI) => {
-    try {
-        await productVariantService.deleteVariant(id);
-        return id;
-    } catch (error: any) {
-        return thunkAPI.rejectWithValue(error.response?.data?.message || "Failed to delete variant");
-    }
-});
-
 const productVariantSlice = createSlice({
     name: "productVariant",
     initialState,
-    reducers: {},
-    extraReducers: (builder) => {
-        builder
-            // Fetch All
-            .addCase(fetchVariants.pending, (state) => { state.loading = true; state.error = null; })
-            .addCase(fetchVariants.fulfilled, (state, action) => { state.loading = false; state.variants = action.payload; })
-            .addCase(fetchVariants.rejected, (state, action) => { state.loading = false; state.error = action.payload as string; })
-            // Add
-            .addCase(addVariant.fulfilled, (state, action) => { state.variants.push(action.payload); })
-            // Edit
-            .addCase(editVariant.fulfilled, (state, action) => {
-                const index = state.variants.findIndex(v => v._id === action.payload._id);
-                if (index !== -1) state.variants[index] = action.payload;
-            })
-            // Remove
-            .addCase(removeVariant.fulfilled, (state, action) => {
-                state.variants = state.variants.filter(v => v._id !== action.payload);
-            });
+    reducers: {
+        setVariants: (state, action: PayloadAction<IProductVariant[]>) => {
+            state.variants = action.payload;
+            state.loading = false;
+        },
+        addVariant: (state, action: PayloadAction<IProductVariant>) => {
+            state.variants.push(action.payload);
+        },
+        updateVariant: (state, action: PayloadAction<IProductVariant>) => {
+            const index = state.variants.findIndex(v => v._id === action.payload._id);
+            if (index !== -1) state.variants[index] = action.payload;
+        },
+        removeVariant: (state, action: PayloadAction<string>) => {
+            state.variants = state.variants.filter(v => v._id !== action.payload);
+        },
+        setLoading: (state, action: PayloadAction<boolean>) => {
+            state.loading = action.payload;
+        },
+        setError: (state, action: PayloadAction<string | null>) => {
+            state.error = action.payload;
+        }
     }
 });
 
+export const { setVariants, addVariant, updateVariant, removeVariant, setLoading, setError } = productVariantSlice.actions;
 export default productVariantSlice.reducer;

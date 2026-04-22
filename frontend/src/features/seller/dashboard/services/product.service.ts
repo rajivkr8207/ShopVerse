@@ -6,13 +6,13 @@ export const productService = {
         return response.data;
     },
 
-    async getProduct(id: string) {
+    async getProductById(id: string) {
         const response = await api.get(`/product/${id}`);
         return response.data;
     },
 
     async createProduct(data: any) {
-        const response = await api.post("/product", data);
+        const response = await api.post("/product/create", data);
         return response.data;
     },
 

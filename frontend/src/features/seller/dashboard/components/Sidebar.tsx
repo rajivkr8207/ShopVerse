@@ -34,16 +34,12 @@ const Sidebar = () => {
                         <LayoutDashboard size={18} /> Dashboard
                     </NavLink>
 
-                    <NavLink to="/seller/categories" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
-                        <LayoutDashboard size={18} /> Categories
-                    </NavLink>
-
                     <NavLink to="/seller/products" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                         <Package size={18} /> Products
                     </NavLink>
 
-                    <NavLink to="/seller/variants" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
-                        <Layers size={18} /> Variants
+                    <NavLink to="/seller/categories" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                        <Layers size={18} /> Categories
                     </NavLink>
 
                     <NavLink to="/seller/orders" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>

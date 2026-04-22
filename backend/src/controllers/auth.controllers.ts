@@ -13,11 +13,12 @@ const cookieOptions = {
 };
 
 export const googleCallback = asyncHandler(async (req: Request, res: Response) => {
-    const user = req.user as any;
-    const token = generateAuthToken(user._id, user.role);
+    const user = req.user as { id: string, role: string };
+    const token = generateAuthToken(user.id, user.role);
     res.cookie("snitch_token", token, cookieOptions);
     res.redirect("http://localhost:5173/")
 })
+
 
 
 
@@ -69,7 +70,7 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const getMe = asyncHandler(async (req: Request, res: Response) => {
-    const user = await getProfileService(req.user?.id as string)
+    const user = await getProfileService((req.user as any)?.id as string)
     return res.status(200).json(
         new ApiResponse(200, user, "User profile fetched successfully")
     );

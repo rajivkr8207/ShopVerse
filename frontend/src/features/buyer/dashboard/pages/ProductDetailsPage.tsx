@@ -1,19 +1,20 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "../../../../app/app.store";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../../../app/app.store";
 import Navbar from "../components/Navbar";
 import { useCart } from "../hooks/useCart";
 import { Loader2, ArrowLeft, ShoppingCart, Check } from "lucide-react";
 import type { IProduct, IProductVariant } from "../../../seller/dashboard/types/seller.type";
-import { productService } from "../../../seller/dashboard/services/product.service";
-import { fetchVariants } from "../../../seller/dashboard/productVariant.slice";
+import useProduct from "../../../seller/dashboard/hooks/useProduct";
+import useVariant from "../../../seller/dashboard/hooks/useVariant";
 
 const ProductDetailsPage = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
-    const dispatch = useDispatch<AppDispatch>();
     const { handleAddToCart } = useCart();
+    const { handleGetProductById } = useProduct();
+    const { handleGetAllVariants } = useVariant();
 
     const [product, setProduct] = useState<IProduct | null>(null);
     const [loading, setLoading] = useState(true);
@@ -28,9 +29,9 @@ const ProductDetailsPage = () => {
         const loadProduct = async () => {
             try {
                 if (id) {
-                    const response = await productService.getProduct(id);
-                    setProduct(response.data);
-                    dispatch(fetchVariants());
+                    const data = await handleGetProductById(id);
+                    setProduct(data);
+                    await handleGetAllVariants();
                 }
             } catch (error) {
                 console.error("Failed to load product", error);
@@ -39,7 +40,7 @@ const ProductDetailsPage = () => {
             }
         };
         loadProduct();
-    }, [id, dispatch]);
+    }, [id, handleGetProductById, handleGetAllVariants]);
 
     if (loading) {
         return (

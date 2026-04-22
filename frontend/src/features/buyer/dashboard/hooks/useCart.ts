@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../../../app/app.store";
-import { setCart, setLoading, setError, setTotalQuantity, setTotalAmount, clearCartLocal } from "../cart.slice";
+import { setCart, setLoading, setError, setTotalQuantity, setTotalAmount } from "../cart.slice";
 import { toast } from "react-toastify";
 import { cartService } from "../services/cart.service";
 
