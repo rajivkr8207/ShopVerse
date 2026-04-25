@@ -37,6 +37,7 @@ const useAuth = () => {
     };
     const handleGetProfile = async () => {
         const res = await authService.getProfile();
+        console.log(res)
         dispatch(setUser(res.data))
     };
     const handleLogout = async () => {

@@ -10,6 +10,7 @@ import ProductsPage from "../features/seller/dashboard/pages/ProductsPage";
 import CategoriesPage from "../features/seller/dashboard/pages/CategoriesPage";
 import ProductDetailsPage from "../features/buyer/dashboard/pages/ProductDetailsPage";
 import CartPage from "../features/buyer/dashboard/pages/CartPage";
+import ProductVarientPage from "../features/seller/dashboard/pages/ProductVarientPage";
 
 export const router = createBrowserRouter([
   {
@@ -51,6 +52,10 @@ export const router = createBrowserRouter([
       {
         path: "products",
         element: <ProductsPage />,
+        children: [{
+          path: ":productId",
+          element: <ProductVarientPage />,
+        }],
       },
       {
         path: "categories",

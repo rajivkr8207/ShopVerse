@@ -4,7 +4,10 @@ export interface CreateProductInput {
     title: string;
     description: string;
     seller: Types.ObjectId;
-    price: number;
+    price: {
+        amount: number;
+        currency: string;
+    };
     images: {
         url: string;
         thumbnailUrl: string;

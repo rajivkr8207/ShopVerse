@@ -1,18 +1,29 @@
+import type { Types } from "mongoose";
+
 export interface CreateVariantInput {
-    productId: string;
-    size: "S" | "M" | "L" | "XL" | "XXL";
-    color: string;
+    productId: Types.ObjectId;
+    seller: Types.ObjectId;
+    images: {
+        url: string;
+        thumbnailUrl: string;
+    }[];
     stock: number;
-    price: number;
-    discountPrice: number;
-    sku: string;
+    attributes: Map<string, string>;
+    price: {
+        amount: number;
+        currency: string;
+    };
 }
 
 export interface UpdateVariantInput {
-    size?: "S" | "M" | "L" | "XL" | "XXL";
-    color?: string;
-    stock?: number;
-    price?: number;
-    discountPrice?: number;
-    sku?: string;
+    images: {
+        url: string;
+        thumbnailUrl: string;
+    }[];
+    stock: number;
+    attributes: Map<string, string>;
+    price: {
+        amount: number;
+        currency: string;
+    };
 }

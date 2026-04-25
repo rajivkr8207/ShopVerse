@@ -10,7 +10,7 @@ import type { RootState } from "../../../app/app.store";
 const Profile = () => {
     const { handleGetProfile, handleLogout } = useAuth()
     const user = useSelector((state: RootState) => state.auth.user) as IUser | null;
-
+    console.log(user);
     useEffect(() => {
         if (!user) {
             handleGetProfile()

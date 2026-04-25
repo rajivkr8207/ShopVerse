@@ -1,10 +1,14 @@
 import mongoose, { Schema, Document, Types } from 'mongoose';
+import priceSchema from './price.schema.js';
 
 export interface IProduct extends Document {
     title: string;
     description: string;
     seller: Types.ObjectId;
-    price: number;
+    price: {
+        amount: number;
+        currency: string;
+    };
     images: {
         url: string;
         thumbnailUrl: string;
@@ -28,18 +32,16 @@ const productSchema = new Schema<IProduct>({
         required: true
     },
     price: {
-        type: Number,
+        type: priceSchema,
         required: true
     },
     images: [
         {
             url: {
                 type: String,
-                required: true
             },
             thumbnailUrl: {
                 type: String,
-                required: true
             }
         }
     ],

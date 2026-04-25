@@ -13,6 +13,8 @@ import type { IProduct, IProductVariant } from "../types/seller.type";
 import useCategory from "../hooks/useCategory";
 import useProduct from "../hooks/useProduct";
 import useVariant from "../hooks/useVariant";
+import { nav } from "framer-motion/client";
+import { useNavigate } from "react-router-dom";
 
 const COLOR_PRESETS = [
     { name: "Black", hex: "#1a1a1a" }, { name: "White", hex: "#f5f5f5" },
@@ -32,7 +34,7 @@ const ProductsPage = () => {
     const { handleGetAllProducts, handleCreateProduct, handleUpdateProduct, handleDeleteProduct } = useProduct();
     const { handleGetAllVariants, handleCreateVariant, handleDeleteVariant } = useVariant();
     const { handleGetAllCategories } = useCategory();
-
+    const navigate = useNavigate();
     // Local State
     const [search, setSearch] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -42,7 +44,11 @@ const ProductsPage = () => {
 
     // Form State - Product
     const [productFormData, setProductFormData] = useState({
-        title: "", description: "", brand: "", category: "", price: "",
+        title: "",
+         description: "",
+          brand: "",
+           category: "",
+            price: "",
     });
     const [productImages, setProductImages] = useState<FileList | null>(null);
 
@@ -235,6 +241,7 @@ const ProductsPage = () => {
                                     initial={{ opacity: 0, scale: 0.9 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                     exit={{ opacity: 0, scale: 0.9 }}
+                                    onClick={()=>{navigate(`/seller/dashboard/products/${product._id}`)}}
                                     className="group flex flex-col bg-white/[0.03] border border-white/[0.06] rounded-[2rem] overflow-hidden hover:border-cyan-400/30 hover:shadow-2xl hover:shadow-black/50 transition-all duration-300"
                                 >
                                     {/* Product Image & Info */}
